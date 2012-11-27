@@ -24,7 +24,7 @@ Usage : ./mydiff.sh -s <src dir> -d <dst dir> [-c <comparison flags>] [-e <skip 
          2 = display differences details
          3 = display all tests
          Default : \"1\"
-    -S                      = synchronize dst from src
+    -S			   = synchronize dst from src
 "
 }
 
@@ -83,6 +83,64 @@ VERBOSE_LEVEL_DIFF_DETAIL=2
 VERBOSE_LEVEL_ALL=3
 
 ############################# ARGUMENTS ANALYSIS ###############################
+
+# Options parser and arguments initialization
+while getopts "s:d:c:e:f:v:S" opt; do
+	case $opt in
+	s)
+		DIRPATH_SRC=$OPTARG
+		;;
+	d)
+		DIRPATH_DST=$OPTARG
+		;;
+	c)
+		for flag in $( echo $OPTARG | tr " " " " ) 
+		do
+			case $flag in
+			'd')
+				COMP_DIFF=1
+				;;
+			'm')
+				COMP_MD5=1
+				;;
+			'p')
+				COMP_PERM=1
+				;;
+			't')
+				COMP_DATE=1
+				;;
+			esac
+		done
+		;;
+	e)
+		EXCLUDE=$OPTARG
+		;;
+	f)
+		FILTER=$OPTARG
+		;;
+	v)
+		case $OPTARG in
+		0)
+			VERBOSE_LEVEL=$VERBOSE_LEVEL_ERROR
+			;;
+		1)
+			VERBOSE_LEVEL=$VERBOSE_LEVEL_DIFF
+			;;
+		2)
+			VERBOSE_LEVEL=$VERBOSE_LEVEL_DIFF_DETAIL
+			;;
+		3)
+			VERBOSE_LEVEL=$VERBOSE_LEVEL_ALL
+			;;
+		esac
+		;;
+	S)
+		SYNCHRONIZE=1
+		;;
+	esac
+done
+
+exit
 
 # TO DO...
 
