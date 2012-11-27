@@ -46,7 +46,46 @@ function DoCompare {
 	src=$1
 	dst=$2
 
-	# TO DO...
+	if [ $COMP_DIFF -eq 1 ]
+	then
+		DiffCompare $src $dst
+	 	res=$?
+		if [ $res -eq 1 ]
+		then
+			return $res
+		fi
+	fi
+
+	if [ $COMP_MD5 -eq 1 ]
+	then
+		MD5Compare $src $dst
+		res=$?
+		if [ $res -eq 1 ]
+		then
+			return $res
+		fi
+	fi
+
+	if [ $COMP_PERM -eq 1 ]
+	then
+		PermCompare $src $dst
+		res=$?
+		if [ $res -eq 1 ]
+		then
+			return $res
+		fi
+	fi
+
+	if [ $COMP_DATE -eq 1 ]
+	then
+		LastModifiedCompare $src $dst
+		res=$?
+		if [ $res -eq 1 ]
+		then
+			return $res
+		fi
+	fi
+	
 
 	return $res
 }
@@ -59,11 +98,64 @@ function DoSynchronize {
 
 }
 
+# Compare the content between two files by using the "diff" command
+function DiffCompare {
+	res=1
+	src=$1
+	dst=$2
+
+	if [ `diff $src` -eq `diff $dst` ]
+	then
+		res=0
+	fi
+	return res	
+}
+
+# Check if two files have the same MD5 hash.
+function MD5Compare {
+	res=1
+	src=$1
+	dst=$2
+
+	if [ $BINARY_MD5 $src == $BINARY_MD5 $dst ]
+	then
+		res=0
+	fi
+	return res
+}
+
+# Compare the unix permission format between two files
+function PermCompare {
+	res=1
+	src=$1
+	dst=$2
+
+	if [ `stat -c %a $src` -eq `stat -c %a $dst` ]
+	then
+		res=0
+	fi
+	return res
+}
+
+# Compare the last time modification between two files
+function LastModifiedCompare {
+	res=1
+	src=$1
+	dst=$2
+
+	if [ `stat -c %Y $src` -eq `stat -c %Y $dst` ]
+	then
+		res=0
+	fi
+	return res
+}
+
 # ================================================================================
 # Beginning of script
 # ================================================================================
 
 ############################# ARGUMENTS DEFAULT VALUES ###############################
+BINARY_MD5="md5sum"
 
 DIRPATH_SRC=""
 DIRPATH_DST=""
@@ -82,18 +174,22 @@ VERBOSE_LEVEL_DIFF=1
 VERBOSE_LEVEL_DIFF_DETAIL=2
 VERBOSE_LEVEL_ALL=3
 
+SUCCESS=0
+ERROR_INVALID_OPTION=1
+ERROR_UNINITIALIZED_VARIABLE=2
 ############################# ARGUMENTS ANALYSIS ###############################
 
 # Options parser and arguments initialization
-while getopts "s:d:c:e:f:v:S" opt; do
+while getopts "s:d:c:e:f:v:Sh" opt
+do
 	case $opt in
-	s)
+	's')
 		DIRPATH_SRC=$OPTARG
 		;;
-	d)
+	'd')
 		DIRPATH_DST=$OPTARG
 		;;
-	c)
+	'c')
 		for flag in $( echo $OPTARG | tr " " " " ) 
 		do
 			case $flag in
@@ -109,16 +205,19 @@ while getopts "s:d:c:e:f:v:S" opt; do
 			't')
 				COMP_DATE=1
 				;;
+			?)
+				PrintUsage
+				exit $ERROR_INVALID_OPTION
 			esac
 		done
 		;;
-	e)
+	'e')
 		EXCLUDE=$OPTARG
 		;;
-	f)
+	'f')
 		FILTER=$OPTARG
 		;;
-	v)
+	'v')
 		case $OPTARG in
 		0)
 			VERBOSE_LEVEL=$VERBOSE_LEVEL_ERROR
@@ -132,27 +231,42 @@ while getopts "s:d:c:e:f:v:S" opt; do
 		3)
 			VERBOSE_LEVEL=$VERBOSE_LEVEL_ALL
 			;;
+		?)
+			PrintUsage
+			exit $ERROR_INVALID_OPTION
 		esac
 		;;
-	S)
+	'S')
 		SYNCHRONIZE=1
 		;;
+	'h')
+		PrintUsage
+		exit $SUCCESS
+		;;
+	?)
+		PrintUsage
+		exit $ERROR_INVALID_OPTION
 	esac
 done
 
-exit
+############################# MAIN  ###############################
 
-# TO DO...
+# Check if the DIRPATH_SRC and DIRPATH_DST variables are initialized
+if [ "$DIRPATH_SRC" == "" ] || [ "$DIRPATH_DST" == "" ]
+then	
+	PrintUsage
+	exit $ERROR_UNINITIALIZED_VARIABLE
+fi
 
+# Compare source and destination directories 
 cd $DIRPATH_SRC
 for dirname in `find . -type d`
 do
-	# TO DO...
+	echo $dirname	# TO DO...
 done
 
+exit
 for filename in ...
 do
 	# TO DO
 done
-
-
