@@ -90,7 +90,6 @@ function DoCompare {
 		fi
 	fi
 	
-
 	return $res
 }
 
@@ -181,6 +180,7 @@ VERBOSE_LEVEL_ALL=3
 SUCCESS=0
 ERROR_INVALID_OPTION=1
 ERROR_UNINITIALIZED_VARIABLE=2
+
 ############################# ARGUMENTS ANALYSIS ###############################
 
 # Options parser and arguments initialization
@@ -262,15 +262,22 @@ then
 	exit $ERROR_UNINITIALIZED_VARIABLE
 fi
 
-# Compare source and destination directories 
+# List sources directories
 cd $DIRPATH_SRC
 for dirname in `find . -type d`
 do
-	echo $dirname	# TO DO...
+	if [ ${DIRPATH_DST#${DIRPATH_DST%?}} != '/' ]
+	then
+		dirnameDst=$DIRPATH_DST${dirname:1} # destination directory
+	else
+		dirnameDst=${DIRPATH_DST:0:{#DIRPATH_DST} - 1}
+	fi
+	echo "dir src: $dirname"
+	echo "dir dst: $dirnameDst"
 done
 
-exit
-for filename in ...
+# List sources files
+for filename in `find . -type f`
 do
-	# TO DO
+	echo $filename
 done
