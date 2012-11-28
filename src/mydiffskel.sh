@@ -1,5 +1,9 @@
 #!/bin/sh
 
+# ================================================================================
+# Printing functions
+# ================================================================================
+
 function PrintUsage {
 	echo "
 Usage : ./mydiff.sh -s <src dir> -d <dst dir> [-c <comparison flags>] [-e <skip items>] [-f <file filter>] [-v <verbose level>] [-S] [-h]
@@ -42,7 +46,7 @@ function PrintMsg {
 # ================================================================================
 
 function DoCompare {
-	res=0
+	res=1
 	src=$1
 	dst=$2
 
@@ -117,7 +121,7 @@ function MD5Compare {
 	src=$1
 	dst=$2
 
-	if [ $BINARY_MD5 $src == $BINARY_MD5 $dst ]
+	if [ `$BINARY_MD5 $src` == `$BINARY_MD5 $dst` ]
 	then
 		res=0
 	fi
