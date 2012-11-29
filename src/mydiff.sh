@@ -46,12 +46,14 @@ function PrintMsg () {
 # Comparison functions
 # ================================================================================
 
+# Compare two entities. It depend on the enabled flags (DIFF, MD5, PERM, LAST DATE MODIFIED)
+# If the entity is a directory, only the PERM test can be done (depending if the flag is enabled)
 function DoCompare () {
 	local res=1
 	local src=$1
 	local dst=$2
 
-	if [ $COMP_DIFF -eq 1 ]
+	if [ $COMP_DIFF -eq 1 ] && [ ! -d $src ] && [ ! -d $dst ]
 	then
 		DiffCompare $src $dst
 	 	res=$?
@@ -61,7 +63,7 @@ function DoCompare () {
 		fi
 	fi
 
-	if [ $COMP_MD5 -eq 1 ]
+	if [ $COMP_MD5 -eq 1 ] && [ ! -d $src ] && [ ! -d $dst ]
 	then
 		MD5Compare $src $dst
 		res=$?
@@ -81,7 +83,7 @@ function DoCompare () {
 		fi
 	fi
 
-	if [ $COMP_DATE -eq 1 ]
+	if [ $COMP_DATE -eq 1 ] && [ ! -d $src ] && [ ! -d $dst ]
 	then
 		LastModifiedCompare $src $dst
 		res=$?
@@ -185,23 +187,27 @@ function CheckInitVariables () {
 	fi
 }
 
+# Recursive function to list content of a directory
 function RecursiveDiff () {
+	local res=0
 	local dst_item=""
 
-	for item in $1/*
+	for src_item in $1/*
 	do
-		dst_item=$DIRPATH_DST${item:${#DIRPATH_SRC}:${#item}}
-		if [ -d $item ]
+		dst_item=$DIRPATH_DST${src_item:${#DIRPATH_SRC}:${#src_item}}
+		if [ -d $src_item ]
 		then
-			echo "src dir: $item"
+			echo "src dir: $src_item"
 			echo "dst dir : $dst_item"
-			RecursiveDiff $item
-		elif [ -f $item ]
+			DoCompare $src_item $dst_item
+			RecursiveDiff $src_item
+		elif [ -f $src_item ]
 		then
-			echo "src file: $item"
+			echo "src file: $src_item"
 			echo "dst file : $dst_item"
 		fi
 	done
+	return $res
 }
 
 # ================================================================================
