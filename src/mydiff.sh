@@ -205,6 +205,7 @@ function RecursiveDiff () {
 		then
 			echo "src file: $src_item"
 			echo "dst file : $dst_item"
+			DoCompare $src_item $dst_item
 		fi
 	done
 	return $res
