@@ -4,7 +4,7 @@
 # Printing functions
 # ================================================================================
 
-function PrintUsage {
+function PrintUsage () {
 	echo "
 Usage : ./mydiff.sh -s <src dir> -d <dst dir> [-c <comparison flags>] [-e <skip items>] [-f <file filter>] [-v <verbose level>] [-S] [-h]
 
@@ -32,9 +32,10 @@ Usage : ./mydiff.sh -s <src dir> -d <dst dir> [-c <comparison flags>] [-e <skip 
 "
 }
 
-function PrintMsg {
-	level=$1
-	msg=$2
+function PrintMsg () {
+	local level=$1
+	local msg=$2
+
 	if [ $level -le $VERBOSE_LEVEL ]
 	then
 		echo $msg
@@ -45,10 +46,10 @@ function PrintMsg {
 # Comparison functions
 # ================================================================================
 
-function DoCompare {
-	res=1
-	src=$1
-	dst=$2
+function DoCompare () {
+	local res=1
+	local src=$1
+	local dst=$2
 
 	if [ $COMP_DIFF -eq 1 ]
 	then
@@ -93,64 +94,114 @@ function DoCompare {
 	return $res
 }
 
-function DoSynchronize {
-	src=$1
-	dst=$2
+function DoSynchronize () {
+	local src=$1
+	local dst=$2
 
 	# TO DO...
 
 }
 
 # Compare the content between two files by using the "diff" command
-function DiffCompare {
-	res=1
-	src=$1
-	dst=$2
+function DiffCompare () {
+	local res=1
+	local src=$1
+	local dst=$2
 
 	if [ `diff $src` -eq `diff $dst` ]
 	then
 		res=0
 	fi
-	return res	
+
+	return $res	
 }
 
 # Check if two files have the same MD5 hash.
-function MD5Compare {
-	res=1
-	src=$1
-	dst=$2
+function MD5Compare () {
+	local res=1
+	local src=$1
+	local dst=$2
 
-	if [ `$BINARY_MD5 $src` == `$BINARY_MD5 $dst` ]
+	if [ `md5sum $src` == `md5sum $dst` ]
 	then
 		res=0
 	fi
-	return res
+
+	return $res
 }
 
 # Compare the unix permission format between two files
-function PermCompare {
-	res=1
-	src=$1
-	dst=$2
+function PermCompare () {
+	local res=1
+	local src=$1
+	local dst=$2
 
 	if [ `stat -c %a $src` -eq `stat -c %a $dst` ]
 	then
 		res=0
 	fi
-	return res
+
+	return $res
 }
 
 # Compare the last time modification between two files
-function LastModifiedCompare {
-	res=1
-	src=$1
-	dst=$2
+function LastModifiedCompare () {
+	local res=1
+	local src=$1
+	local dst=$2
 
 	if [ `stat -c %Y $src` -eq `stat -c %Y $dst` ]
 	then
 		res=0
 	fi
-	return res
+
+	return $res
+}
+
+# ================================================================================
+# Utils functions
+# ================================================================================
+
+# Check if the given directory ends with a slash and remove it
+function  RemoveEndSlash() {
+	local dir=$1
+	
+	if [ ${dir#${dir%?}} == '/' ]
+	then
+		dir=${dir:0:${#dir} - 1}
+	fi
+	echo $dir
+}
+
+# Check if the DIRPATH_SRC and DIRPATH_DST variables are initialized
+function CheckInitVariables () {
+	local src=$1
+	local dst=$2
+
+	if [ "$1" == "" ] || [ "$2" == "" ]
+	then	
+		PrintUsage
+		exit $ERROR_UNINITIALIZED_VARIABLE
+	fi
+}
+
+function RecursiveDiff () {
+	local dst_item=""
+
+	for item in $1/*
+	do
+		dst_item=$DIRPATH_DST${item:${#DIRPATH_SRC}:${#item}}
+		if [ -d $item ]
+		then
+			echo "src dir: $item"
+			echo "dst dir : $dst_item"
+			RecursiveDiff $item
+		elif [ -f $item ]
+		then
+			echo "src file: $item"
+			echo "dst file : $dst_item"
+		fi
+	done
 }
 
 # ================================================================================
@@ -158,7 +209,6 @@ function LastModifiedCompare {
 # ================================================================================
 
 ############################# ARGUMENTS DEFAULT VALUES ###############################
-BINARY_MD5="md5sum"
 
 DIRPATH_SRC=""
 DIRPATH_DST=""
@@ -188,10 +238,10 @@ while getopts "s:d:c:e:f:v:Sh" opt
 do
 	case $opt in
 	's')
-		DIRPATH_SRC=$OPTARG
+		DIRPATH_SRC=`RemoveEndSlash $OPTARG`
 		;;
 	'd')
-		DIRPATH_DST=$OPTARG
+		DIRPATH_DST=`RemoveEndSlash $OPTARG`
 		;;
 	'c')
 		for flag in $( echo $OPTARG | tr " " " " ) 
@@ -255,29 +305,6 @@ done
 
 ############################# MAIN  ###############################
 
-# Check if the DIRPATH_SRC and DIRPATH_DST variables are initialized
-if [ "$DIRPATH_SRC" == "" ] || [ "$DIRPATH_DST" == "" ]
-then	
-	PrintUsage
-	exit $ERROR_UNINITIALIZED_VARIABLE
-fi
+CheckInitVariables $DIRPATH_SRC $DIRPATH_DST
+RecursiveDiff $DIRPATH_SRC
 
-# List sources directories
-cd $DIRPATH_SRC
-for dirname in `find . -type d`
-do
-	if [ ${DIRPATH_DST#${DIRPATH_DST%?}} != '/' ]
-	then
-		dirnameDst=$DIRPATH_DST${dirname:1} # destination directory
-	else
-		dirnameDst=${DIRPATH_DST:0:{#DIRPATH_DST} - 1}
-	fi
-	echo "dir src: $dirname"
-	echo "dir dst: $dirnameDst"
-done
-
-# List sources files
-for filename in `find . -type f`
-do
-	echo $filename
-done
