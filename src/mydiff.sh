@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # ================================================================================
 # Printing functions
@@ -7,11 +7,15 @@
 # Display the help menu
 function PrintUsage() {
 	echo "
-Usage : ./mydiff.sh -s <src dir> -d <dst dir> [-c <comparison flags>] [-e <skip items>] [-f <file filter>] [-v <verbose level>] [-S] [-h]
+Usage : ./mydiff.sh -s <src dir> -d <dst dir> [-m <comparison mode] [-c <comparison flags>] [-e <skip items>] [-f <file filter>] [-v <verbose level>] [-S] [-h]
 
     -h                      = display this help
     -s <src dir>            = source directory
     -d <dst dir>            = destination directory
+    -m <comparison mode>    = algorithm used to analysed directories
+         iterative
+         recursive
+         Default : \"recursive\"
     -c <comparison flags>   = properties to compare :
          d = diff
          m = md5
@@ -49,7 +53,6 @@ function PrintMsg() {
 # Write a message with a given item name in a log file.
 function LogDiff() {
 	local item=$1
-	local res=1
 
 	if [ $LOG_NEW_ENTRY -eq 1 ]
 	then
@@ -62,13 +65,7 @@ function LogDiff() {
 		echo "" >> $LOG_FILE
 	fi
 
-	if [ -f $LOG_FILE ]
-	then
-		echo "[dst][-] $item" >> $LOG_FILE
-		res=0
-	fi
-
-	return $res
+	echo "[dst][-] $item" >> $LOG_FILE
 }
 
 # ================================================================================
@@ -83,8 +80,8 @@ function DoSynchronize() {
 
 }
 
-# Compare two entities. It depend on the enabled flags (DIFF, MD5, PERM, LAST DATE MODIFIED)
-# If the entity is a directory, only the PERM test can be done (depending if the flag is enabled)
+# Compare two entities.  Tests depend on the enabled flags (DIFF, MD5, PERM, LAST DATE MODIFIED)
+# If the entity is a directory, only the PERM test is done
 function DoCompare() {
 	local res=1
 	local src=$1
@@ -153,9 +150,8 @@ function DiffCompare() {
 	local res=1
 	local src=$1
 	local dst=$2
-	local diff=""
+	local diff=`diff $src $dst`
 
-	diff=`diff $src $dst`
 	if [ $? -eq 0 ]
 	then
 		res=0
@@ -168,7 +164,7 @@ function DiffCompare() {
 	return $res	
 }
 
-# Check if two files have the same MD5 hash.
+# Check if two files have the same MD5 hash
 function MD5Compare() {
 	local res=1
 	local src=$1
@@ -188,7 +184,7 @@ function MD5Compare() {
 	return $res
 }
 
-# Compare the unix permission format between two files
+# Compare the permissions between two files
 function PermCompare() {
 	local res=1
 	local src=$1
@@ -208,7 +204,7 @@ function PermCompare() {
 	return $res
 }
 
-# Compare the last time modification between two files
+# Compare the last modified date between two files
 function LastModifiedCompare() {
 	local res=1
 	local src=$1
@@ -232,7 +228,7 @@ function LastModifiedCompare() {
 # Utils functions
 # ================================================================================
 
-# Check if the given directory ends with a slash and remove it
+# Check if the given directory ends with a slash and then remove it
 function  RemoveEndSlash() {
 	local dir=$1
 	
@@ -243,28 +239,22 @@ function  RemoveEndSlash() {
 	echo $dir
 }
 
-# Check if the given variable is initialized
-function CheckInitSrcDst() {
-	res=1
-	local src=$1
-	local dst=$2
+# Check if the DIRPATH_SRC and DIRPATH_DST variables are initialized
+function CheckInitSrcDestVar() {
 
-	if [ "$src" == "" ] || [ "$dst" == "" ]
+	if [ "$DIRPATH_SRC" == "" ] || [ "$DIRPATH_DST" == "" ]
 	then	
-		PrintMsg 3 "[3][myDiff] Test    : Check Variable Initialization"
-		PrintMsg 3 "   [myDiff] Result  : Variable $name is not initialized"
+		PrintMsg 3 "[3][myDiff] Test    : DIRPATH_SRC and DIRPATH_DST variables initialization" 
+		PrintMsg 3 "   [myDiff] Result  : DIRPATH_SRC and/or DIRPATH_DST is/are not initialized"
 		PrintUsage
 		exit $ERROR_UNINITIALIZED_VARIABLE
-	else
-		res=0
 	fi
-
-	return $res
 }
 
 # Return the file extension (ex: '.txt' )
 function GetFileExtension() {
 	local file=$1
+
 	echo .${file#*.}
 }
 
@@ -274,27 +264,35 @@ function RecursiveDiff() {
 	local src=$1
 	local dst=$2
 	local dst_item=""
-	for src_item in $src/*
+
+  for src_item in $src/*
 	do
+
 		dst_item=$dst${src_item:${#DIRPATH_SRC}:${#src_item}} # deduction of the destination item from the source item
-		if [ -d $src_item ]
+
+    if [ -d $src_item ] # if the item is a directory
 		then
-			DoCompare $src_item $dst_item
+			DoCompare $src_item $dst_item 
 			res=$?
-			if [ $res -eq 1 ]
+
+      if [ $res -eq 1 ] 
 			then
 				PrintMsg 1 "[1][-] Test   : Comparison"
 				PrintMsg 1 "   [-] Result : Directories $src_item and $dst_item mismatch"
-				if [ $VERBOSE_LEVEL -ne 0 ]
+		
+        if [ $VERBOSE_LEVEL -ne 0 ]
 				then
 					printf '\n\n'
 				fi
 				LogDiff $dst_item
 			fi
-			RecursiveDiff $src_item $dst 
-		elif [ -e $src_item ]
+
+			RecursiveDiff $src_item $dst
+
+
+    elif [ -e $src_item ] # else if the item is a file 
 		then
-			if [ "$FILTER" == "" ]
+      if [ "$FILTER" == "" ]
 			then
 				DoCompare $src_item $dst_item
 				res=$?
@@ -308,17 +306,20 @@ function RecursiveDiff() {
 					fi
 				done
 			fi
-			
-			if [ $res -eq 1 ]
+	
+      if [ $res -eq 1 ]
 			then
 				PrintMsg 1 "[1][-] Test   : Comparison"
-			        PrintMsg 1 "   [-] Result : $src_item and $dst_item mismatch"
-				if [ $VERBOSE_LEVEL -ne 0 ]
+			  PrintMsg 1 "   [-] Result : $src_item and $dst_item mismatch"
+		
+        if [ $VERBOSE_LEVEL -ne 0 ]
 				then
 					printf '\n\n'	
 				fi
 				LogDiff $dst_item
 			fi
+
+
 		fi
 	done
 
@@ -333,6 +334,7 @@ function RecursiveDiff() {
 
 DIRPATH_SRC=""
 DIRPATH_DST=""
+ANALYSIS_MODE=1
 COMP="d"
 COMP_DIFF=1
 COMP_MD5=0
@@ -357,15 +359,33 @@ ERROR_UNINITIALIZED_VARIABLE=2
 ############################# ARGUMENTS ANALYSIS ###############################
 
 # Options parser and arguments initialization
-while getopts "s:d:c:e:f:l:v:Sh" opt
+while getopts "s:d:m:c:e:f:l:v:Sh" opt
 do
 	case $opt in
 	's')
 		DIRPATH_SRC=`RemoveEndSlash $OPTARG`
 		;;
+
 	'd')
 		DIRPATH_DST=`RemoveEndSlash $OPTARG`
 		;;
+  
+  'm')
+    case $OPTARG in
+    'iterative')
+      ANALYSIS_MODE=0
+      ;;
+    'recursive')
+      ANALYSIS_MODE=1
+      ;;
+    ?)
+      PrintMsg 3 "[3][myDiff] Test   : Option checking"
+      PrintMsg 3 "   [myDiff] Result : Option '-m' has an invalid parameter"
+      PrintUsage
+      exit $ERROR_INVALID_OPTION
+    esac
+    ;;
+
 	'c')
 		for flag in $( echo $OPTARG | tr " " " " ) 
 		do
@@ -384,27 +404,30 @@ do
 				;;
 			?)
 				PrintMsg 3 "[3][myDiff] Test   : Option checking"
-			        PrintMsg 3 "   [myDiff] Result : Option '-c' has an invalid parameter"
+	      PrintMsg 3 "   [myDiff] Result : Option '-c' has an invalid parameter"
 				PrintUsage
 				exit $ERROR_INVALID_OPTION
 			esac
 		done
 		;;
+
 	'e')
 		EXCLUDE=$OPTARG
 		;;
+
 	'f')
-		tmp=$(echo $OPTARG | tr ";" " ")
-		for ext in $tmp
+		for ext in $(echo $OPTARG | tr ";" " ")
 		do
 			ext=$(echo $ext | tr "*" " ")
 			ext=${ext[0]}
 			FILTER="$FILTER$ext "
 	 	done	
 		;;
+
 	'l')	
 		LOG_FILE=$OPTARG
 		;;
+
 	'v')
 		case $OPTARG in
 		0)
@@ -426,13 +449,16 @@ do
 			exit $ERROR_INVALID_OPTION
 		esac
 		;;
+
 	'S')
 		SYNCHRONIZE=1
 		;;
+
 	'h')
 		PrintUsage
 		exit $SUCCESS
 		;;
+
 	?)
 		PrintMsg 3 "[3][myDiff] Test   : Option Checking"
 	 	PrintMsg 3 "   [myDiff] Result : Option is not valid"
@@ -442,6 +468,19 @@ do
 done
 
 ############################# MAIN  ###############################
+start_time=$(date +%s.%N)
 
-CheckInitSrcDst $DIRPATH_SRC $DIRPATH_DST
-RecursiveDiff $DIRPATH_SRC $DIRPATH_DST
+CheckInitSrcDestVar
+
+if [ $ANALYSIS_MODE -eq 1 ]
+then
+  echo "recursive"
+  RecursiveDiff $DIRPATH_SRC $DIRPATH_DST
+else
+  echo "iterative"
+fi
+
+end_time=$(date +%s.%N)
+echo "Execution time : "$( echo "$end_time - $start_time" | bc )" seconds" 
+
+exit $SUCESS
