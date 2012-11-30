@@ -243,18 +243,29 @@ function  RemoveEndSlash() {
 	echo $dir
 }
 
-# Check if the DIRPATH_SRC and DIRPATH_DST variables are initialized
-function CheckInitVariables() {
+# Check if the given variable is initialized
+function CheckInitSrcDst() {
+	res=1
 	local src=$1
 	local dst=$2
 
-	if [ "$1" == "" ] || [ "$2" == "" ]
+	if [ "$src" == "" ] || [ "$dst" == "" ]
 	then	
-		PrintMsg 3 "[3][myDiff] Test    : Check Variables Initialization"
-		PrintMsg 3 "   [myDiff] Result  : DIRPATH_SRC and/or DIRPATH_DST variables are not initialized"
+		PrintMsg 3 "[3][myDiff] Test    : Check Variable Initialization"
+		PrintMsg 3 "   [myDiff] Result  : Variable $name is not initialized"
 		PrintUsage
 		exit $ERROR_UNINITIALIZED_VARIABLE
+	else
+		res=0
 	fi
+
+	return $res
+}
+
+# Return the file extension (ex: '.txt' )
+function GetFileExtension() {
+	local file=$1
+	echo .${file#*.}
 }
 
 # Recursive function to explore a given source directory and compare it with a destination directory
@@ -263,15 +274,14 @@ function RecursiveDiff() {
 	local src=$1
 	local dst=$2
 	local dst_item=""
-
 	for src_item in $src/*
 	do
 		dst_item=$dst${src_item:${#DIRPATH_SRC}:${#src_item}} # deduction of the destination item from the source item
-
 		if [ -d $src_item ]
-		then			
+		then
 			DoCompare $src_item $dst_item
-			if [ $? -eq 1 ]
+			res=$?
+			if [ $res -eq 1 ]
 			then
 				PrintMsg 1 "[1][-] Test   : Comparison"
 				PrintMsg 1 "   [-] Result : Directories $src_item and $dst_item mismatch"
@@ -284,8 +294,22 @@ function RecursiveDiff() {
 			RecursiveDiff $src_item $dst 
 		elif [ -e $src_item ]
 		then
-			DoCompare $src_item $dst_item
-			if [ $? -eq 1 ]
+			if [ "$FILTER" == "" ]
+			then
+				DoCompare $src_item $dst_item
+				res=$?
+			else
+				for extension in $FILTER
+				do
+					if [ `GetFileExtension $src_item` == $extension ]
+					then
+						DoCompare $src_item $dst_item
+						res=$?
+					fi
+				done
+			fi
+			
+			if [ $res -eq 1 ]
 			then
 				PrintMsg 1 "[1][-] Test   : Comparison"
 			        PrintMsg 1 "   [-] Result : $src_item and $dst_item mismatch"
@@ -370,7 +394,13 @@ do
 		EXCLUDE=$OPTARG
 		;;
 	'f')
-		FILTER=$OPTARG
+		tmp=$(echo $OPTARG | tr ";" " ")
+		for ext in $tmp
+		do
+			ext=$(echo $ext | tr "*" " ")
+			ext=${ext[0]}
+			FILTER="$FILTER$ext "
+	 	done	
 		;;
 	'l')	
 		LOG_FILE=$OPTARG
@@ -413,5 +443,5 @@ done
 
 ############################# MAIN  ###############################
 
-CheckInitVariables $DIRPATH_SRC $DIRPATH_DST
+CheckInitSrcDst $DIRPATH_SRC $DIRPATH_DST
 RecursiveDiff $DIRPATH_SRC $DIRPATH_DST

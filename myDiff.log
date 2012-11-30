@@ -1,0 +1,982 @@
+--------------------------------------------------------------
+Date : Fri Nov 30 15:28:27 CET 2012
+Source directory : tests/src
+Destination directory : tests/dst
+
+[dst][-] tests/dst/file3
+[dst][-] tests/dst/log.txt
+[dst][-] tests/dst/rep3
+[dst][-] tests/dst/rep3/rep31
+[dst][-] tests/dst/rep3/rep31/file1
+[dst][-] tests/dst/test.txt
+--------------------------------------------------------------
+Date : Fri Nov 30 15:28:56 CET 2012
+Source directory : tests/src
+Destination directory : tests/dst
+
+[dst][-] tests/dst/file3
+[dst][-] tests/dst/log.txt
+[dst][-] tests/dst/rep3
+[dst][-] tests/dst/rep3/rep31
+[dst][-] tests/dst/rep3/rep31/file1
+[dst][-] tests/dst/test.txt
+--------------------------------------------------------------
+Date : Fri Nov 30 15:34:09 CET 2012
+Source directory : tests/src
+Destination directory : tests/dst
+
+[dst][-] tests/dst/file3
+[dst][-] tests/dst/log.txt
+[dst][-] tests/dst/rep3
+[dst][-] tests/dst/rep3/rep31
+[dst][-] tests/dst/rep3/rep31/file1
+[dst][-] tests/dst/test.txt
+--------------------------------------------------------------
+Date : Fri Nov 30 15:34:48 CET 2012
+Source directory : tests/src
+Destination directory : tests/dst
+
+[dst][-] tests/dst/file3
+[dst][-] tests/dst/log.txt
+[dst][-] tests/dst/rep3
+[dst][-] tests/dst/rep3/rep31
+[dst][-] tests/dst/rep3/rep31/file1
+[dst][-] tests/dst/test.txt
+--------------------------------------------------------------
+Date : Fri Nov 30 15:54:17 CET 2012
+Source directory : tests/src
+Destination directory : tests/dst
+
+[dst][-] tests/dst/file3
+[dst][-] tests/dst/log.txt
+[dst][-] tests/dst/rep3
+[dst][-] tests/dst/rep3/rep31
+[dst][-] tests/dst/rep3/rep31/file1
+[dst][-] tests/dst/test.txt
+--------------------------------------------------------------
+Date : Fri Nov 30 15:55:35 CET 2012
+Source directory : tests/src
+Destination directory : tests/dst
+
+[dst][-] tests/dst/file3
+[dst][-] tests/dst/log.txt
+[dst][-] tests/dst/rep3
+[dst][-] tests/dst/rep3/rep31
+[dst][-] tests/dst/rep3/rep31/file1
+[dst][-] tests/dst/test.txt
+--------------------------------------------------------------
+Date : Fri Nov 30 15:55:47 CET 2012
+Source directory : tests/src
+Destination directory : tests/dst
+
+[dst][-] tests/dst/file3
+[dst][-] tests/dst/log.txt
+[dst][-] tests/dst/rep3
+[dst][-] tests/dst/rep3/rep31
+[dst][-] tests/dst/rep3/rep31/file1
+[dst][-] tests/dst/test.txt
+--------------------------------------------------------------
+Date : Fri Nov 30 15:56:00 CET 2012
+Source directory : tests/src
+Destination directory : 
+
+[dst][-] /file1
+[dst][-] /file2
+[dst][-] /file3
+[dst][-] /log.txt
+[dst][-] /rep1
+[dst][-] /rep1/rep11
+[dst][-] /rep1/rep11/file1
+[dst][-] /rep1/rep11/rep111
+[dst][-] /rep1/rep11/rep111/file1
+[dst][-] /rep2
+[dst][-] /rep2/rep21
+[dst][-] /rep2/rep21/rep211
+[dst][-] /rep2/rep22
+[dst][-] /rep2/rep22/file1
+[dst][-] /rep2/rep22/rep221
+[dst][-] /rep3
+[dst][-] /rep3/file1
+[dst][-] /rep3/rep31
+[dst][-] /rep3/rep31/file1
+[dst][-] /test.txt
+--------------------------------------------------------------
+Date : Fri Nov 30 15:56:08 CET 2012
+Source directory : tests/src
+Destination directory : 
+
+[dst][-] /file1
+[dst][-] /file2
+[dst][-] /file3
+[dst][-] /log.txt
+[dst][-] /rep1
+[dst][-] /rep1/rep11
+[dst][-] /rep1/rep11/file1
+[dst][-] /rep1/rep11/rep111
+[dst][-] /rep1/rep11/rep111/file1
+[dst][-] /rep2
+[dst][-] /rep2/rep21
+[dst][-] /rep2/rep21/rep211
+[dst][-] /rep2/rep22
+[dst][-] /rep2/rep22/file1
+[dst][-] /rep2/rep22/rep221
+[dst][-] /rep3
+[dst][-] /rep3/file1
+[dst][-] /rep3/rep31
+[dst][-] /rep3/rep31/file1
+[dst][-] /test.txt
+--------------------------------------------------------------
+Date : Fri Nov 30 15:56:11 CET 2012
+Source directory : tests/src
+Destination directory : 
+
+[dst][-] /file1
+[dst][-] /file2
+[dst][-] /file3
+[dst][-] /log.txt
+[dst][-] /rep1
+[dst][-] /rep1/rep11
+[dst][-] /rep1/rep11/file1
+[dst][-] /rep1/rep11/rep111
+[dst][-] /rep1/rep11/rep111/file1
+[dst][-] /rep2
+[dst][-] /rep2/rep21
+[dst][-] /rep2/rep21/rep211
+[dst][-] /rep2/rep22
+[dst][-] /rep2/rep22/file1
+[dst][-] /rep2/rep22/rep221
+[dst][-] /rep3
+[dst][-] /rep3/file1
+[dst][-] /rep3/rep31
+[dst][-] /rep3/rep31/file1
+[dst][-] /test.txt
+--------------------------------------------------------------
+Date : Fri Nov 30 15:56:13 CET 2012
+Source directory : tests/src
+Destination directory : 
+
+[dst][-] /file1
+[dst][-] /file2
+[dst][-] /file3
+[dst][-] /log.txt
+[dst][-] /rep1
+[dst][-] /rep1/rep11
+[dst][-] /rep1/rep11/file1
+[dst][-] /rep1/rep11/rep111
+[dst][-] /rep1/rep11/rep111/file1
+[dst][-] /rep2
+[dst][-] /rep2/rep21
+[dst][-] /rep2/rep21/rep211
+[dst][-] /rep2/rep22
+[dst][-] /rep2/rep22/file1
+[dst][-] /rep2/rep22/rep221
+[dst][-] /rep3
+[dst][-] /rep3/file1
+[dst][-] /rep3/rep31
+[dst][-] /rep3/rep31/file1
+[dst][-] /test.txt
+--------------------------------------------------------------
+Date : Fri Nov 30 15:56:16 CET 2012
+Source directory : tests/src
+Destination directory : 
+
+[dst][-] /file1
+[dst][-] /file2
+[dst][-] /file3
+[dst][-] /log.txt
+[dst][-] /rep1
+[dst][-] /rep1/rep11
+[dst][-] /rep1/rep11/file1
+[dst][-] /rep1/rep11/rep111
+[dst][-] /rep1/rep11/rep111/file1
+[dst][-] /rep2
+[dst][-] /rep2/rep21
+[dst][-] /rep2/rep21/rep211
+[dst][-] /rep2/rep22
+[dst][-] /rep2/rep22/file1
+[dst][-] /rep2/rep22/rep221
+[dst][-] /rep3
+[dst][-] /rep3/file1
+[dst][-] /rep3/rep31
+[dst][-] /rep3/rep31/file1
+[dst][-] /test.txt
+--------------------------------------------------------------
+Date : Fri Nov 30 15:58:06 CET 2012
+Source directory : tests/src
+Destination directory : 
+
+[dst][-] /file1
+[dst][-] /file2
+[dst][-] /file3
+[dst][-] /log.txt
+[dst][-] /rep1
+[dst][-] /rep1/rep11
+[dst][-] /rep1/rep11/file1
+[dst][-] /rep1/rep11/rep111
+[dst][-] /rep1/rep11/rep111/file1
+[dst][-] /rep2
+[dst][-] /rep2/rep21
+[dst][-] /rep2/rep21/rep211
+[dst][-] /rep2/rep22
+[dst][-] /rep2/rep22/file1
+[dst][-] /rep2/rep22/rep221
+[dst][-] /rep3
+[dst][-] /rep3/file1
+[dst][-] /rep3/rep31
+[dst][-] /rep3/rep31/file1
+[dst][-] /test.txt
+--------------------------------------------------------------
+Date : Fri Nov 30 15:58:10 CET 2012
+Source directory : tests/src
+Destination directory : 
+
+[dst][-] /file1
+[dst][-] /file2
+[dst][-] /file3
+[dst][-] /log.txt
+[dst][-] /rep1
+[dst][-] /rep1/rep11
+[dst][-] /rep1/rep11/file1
+[dst][-] /rep1/rep11/rep111
+[dst][-] /rep1/rep11/rep111/file1
+[dst][-] /rep2
+[dst][-] /rep2/rep21
+[dst][-] /rep2/rep21/rep211
+[dst][-] /rep2/rep22
+[dst][-] /rep2/rep22/file1
+[dst][-] /rep2/rep22/rep221
+[dst][-] /rep3
+[dst][-] /rep3/file1
+[dst][-] /rep3/rep31
+[dst][-] /rep3/rep31/file1
+[dst][-] /test.txt
+--------------------------------------------------------------
+Date : Fri Nov 30 15:58:19 CET 2012
+Source directory : 
+Destination directory : 
+
+[dst][-] /dev/fd/255
+--------------------------------------------------------------
+Date : Fri Nov 30 15:59:39 CET 2012
+Source directory : 
+Destination directory : 
+
+[dst][-] /dev/fd/255
+--------------------------------------------------------------
+Date : Fri Nov 30 16:04:04 CET 2012
+Source directory : tests/src
+Destination directory : tests/dst
+
+[dst][-] tests/dst/file3
+[dst][-] tests/dst/log.txt
+[dst][-] tests/dst/rep3
+[dst][-] tests/dst/rep3/rep31
+[dst][-] tests/dst/rep3/rep31/file1
+[dst][-] tests/dst/test.txt
+--------------------------------------------------------------
+Date : Fri Nov 30 16:10:00 CET 2012
+Source directory : tests/src
+Destination directory : tests/dst
+
+[dst][-] tests/dst/file3
+[dst][-] tests/dst/log.txt
+[dst][-] tests/dst/rep3
+[dst][-] tests/dst/rep3/rep31
+[dst][-] tests/dst/rep3/rep31/file1
+[dst][-] tests/dst/test.txt
+--------------------------------------------------------------
+Date : Fri Nov 30 16:10:18 CET 2012
+Source directory : tests/src
+Destination directory : tests/dst
+
+[dst][-] tests/dst/log.txt
+[dst][-] tests/dst/rep3
+[dst][-] tests/dst/rep3/rep31
+[dst][-] tests/dst/test.txt
+--------------------------------------------------------------
+Date : Fri Nov 30 16:11:17 CET 2012
+Source directory : tests/src
+Destination directory : tests/dst
+
+[dst][-] tests/dst/log.txt
+[dst][-] tests/dst/rep3
+[dst][-] tests/dst/rep3/rep31
+[dst][-] tests/dst/test.txt
+--------------------------------------------------------------
+Date : Fri Nov 30 16:11:55 CET 2012
+Source directory : tests/src
+Destination directory : tests/dst
+
+[dst][-] tests/dst/log.txt
+[dst][-] tests/dst/rep3
+[dst][-] tests/dst/rep3/rep31
+[dst][-] tests/dst/test.txt
+--------------------------------------------------------------
+Date : Fri Nov 30 16:13:54 CET 2012
+Source directory : tests/src
+Destination directory : tests/dst
+
+[dst][-] tests/dst/rep3
+[dst][-] tests/dst/rep3/rep31
+--------------------------------------------------------------
+Date : Fri Nov 30 16:14:38 CET 2012
+Source directory : tests/src
+Destination directory : tests/dst
+
+[dst][-] tests/dst/rep3
+[dst][-] tests/dst/rep3/rep31
+--------------------------------------------------------------
+Date : Fri Nov 30 16:14:46 CET 2012
+Source directory : tests/src
+Destination directory : tests/dst
+
+[dst][-] tests/dst/rep3
+[dst][-] tests/dst/rep3/rep31
+--------------------------------------------------------------
+Date : Fri Nov 30 16:14:54 CET 2012
+Source directory : tests/src
+Destination directory : tests/dst
+
+[dst][-] tests/dst/rep3
+[dst][-] tests/dst/rep3/rep31
+--------------------------------------------------------------
+Date : Fri Nov 30 16:14:56 CET 2012
+Source directory : tests/src
+Destination directory : tests/dst
+
+[dst][-] tests/dst/log.txt
+[dst][-] tests/dst/rep3
+[dst][-] tests/dst/rep3/rep31
+[dst][-] tests/dst/test.txt
+--------------------------------------------------------------
+Date : Fri Nov 30 16:15:52 CET 2012
+Source directory : tests/src
+Destination directory : tests/dst
+
+[dst][-] tests/dst/log.txt
+[dst][-] tests/dst/rep3
+[dst][-] tests/dst/rep3/rep31
+[dst][-] tests/dst/test.txt
+--------------------------------------------------------------
+Date : Fri Nov 30 16:16:04 CET 2012
+Source directory : tests/src
+Destination directory : tests/dst
+
+[dst][-] tests/dst/log.txt
+[dst][-] tests/dst/rep3
+[dst][-] tests/dst/rep3/rep31
+[dst][-] tests/dst/test.txt
+--------------------------------------------------------------
+Date : Fri Nov 30 16:16:13 CET 2012
+Source directory : tests/src
+Destination directory : tests/dst
+
+[dst][-] tests/dst/log.txt
+[dst][-] tests/dst/rep3
+[dst][-] tests/dst/rep3/rep31
+[dst][-] tests/dst/test.txt
+--------------------------------------------------------------
+Date : Fri Nov 30 16:16:19 CET 2012
+Source directory : tests/src
+Destination directory : tests/dst
+
+[dst][-] tests/dst/file3
+[dst][-] tests/dst/log.txt
+[dst][-] tests/dst/rep3
+[dst][-] tests/dst/rep3/rep31
+[dst][-] tests/dst/rep3/rep31/file1
+[dst][-] tests/dst/test.txt
+--------------------------------------------------------------
+Date : Fri Nov 30 16:17:19 CET 2012
+Source directory : tests/src
+Destination directory : tests/dst
+
+[dst][-] tests/dst/rep3
+[dst][-] tests/dst/rep3/rep31
+--------------------------------------------------------------
+Date : Fri Nov 30 16:17:43 CET 2012
+Source directory : tests/src
+Destination directory : tests/dst
+
+[dst][-] tests/dst/rep3
+[dst][-] tests/dst/rep3/rep31
+--------------------------------------------------------------
+Date : Fri Nov 30 16:18:01 CET 2012
+Source directory : tests/src
+Destination directory : tests/dst
+
+[dst][-] tests/dst/file3
+[dst][-] tests/dst/log.txt
+[dst][-] tests/dst/rep3
+[dst][-] tests/dst/rep3/rep31
+[dst][-] tests/dst/rep3/rep31/file1
+[dst][-] tests/dst/test.txt
+--------------------------------------------------------------
+Date : Fri Nov 30 16:18:46 CET 2012
+Source directory : tests/src
+Destination directory : tests/dst
+
+[dst][-] tests/dst/file3
+[dst][-] tests/dst/log.txt
+[dst][-] tests/dst/rep3
+[dst][-] tests/dst/rep3/rep31
+[dst][-] tests/dst/rep3/rep31/file1
+[dst][-] tests/dst/test.txt
+--------------------------------------------------------------
+Date : Fri Nov 30 16:19:09 CET 2012
+Source directory : tests/src
+Destination directory : tests/dst
+
+[dst][-] tests/dst/file3
+[dst][-] tests/dst/log.txt
+[dst][-] tests/dst/rep3
+[dst][-] tests/dst/rep3/rep31
+[dst][-] tests/dst/rep3/rep31/file1
+[dst][-] tests/dst/test.txt
+--------------------------------------------------------------
+Date : Fri Nov 30 16:19:15 CET 2012
+Source directory : tests/src
+Destination directory : tests/dst
+
+[dst][-] tests/dst/file3
+[dst][-] tests/dst/log.txt
+[dst][-] tests/dst/rep3
+[dst][-] tests/dst/rep3/rep31
+[dst][-] tests/dst/rep3/rep31/file1
+[dst][-] tests/dst/test.txt
+--------------------------------------------------------------
+Date : Fri Nov 30 16:19:21 CET 2012
+Source directory : tests/src
+Destination directory : tests/dst
+
+[dst][-] tests/dst/log.txt
+[dst][-] tests/dst/rep3
+[dst][-] tests/dst/rep3/rep31
+[dst][-] tests/dst/test.txt
+--------------------------------------------------------------
+Date : Fri Nov 30 16:19:54 CET 2012
+Source directory : tests/src
+Destination directory : tests/dst
+
+[dst][-] tests/dst/log.txt
+[dst][-] tests/dst/rep3
+[dst][-] tests/dst/rep3/rep31
+[dst][-] tests/dst/test.txt
+--------------------------------------------------------------
+Date : Fri Nov 30 16:20:09 CET 2012
+Source directory : tests/src
+Destination directory : tests/dst
+
+[dst][-] tests/dst/log.txt
+[dst][-] tests/dst/rep3
+[dst][-] tests/dst/rep3/rep31
+[dst][-] tests/dst/test.txt
+--------------------------------------------------------------
+Date : Fri Nov 30 16:20:38 CET 2012
+Source directory : tests/src
+Destination directory : tests/dst
+
+[dst][-] tests/dst/log.txt
+[dst][-] tests/dst/rep3
+[dst][-] tests/dst/rep3/rep31
+[dst][-] tests/dst/test.txt
+--------------------------------------------------------------
+Date : Fri Nov 30 16:21:07 CET 2012
+Source directory : tests/src
+Destination directory : tests/dst
+
+[dst][-] tests/dst/log.txt
+[dst][-] tests/dst/rep3
+[dst][-] tests/dst/rep3/rep31
+[dst][-] tests/dst/test.txt
+--------------------------------------------------------------
+Date : Fri Nov 30 16:21:35 CET 2012
+Source directory : tests/src
+Destination directory : tests/dst
+
+[dst][-] tests/dst/rep3
+[dst][-] tests/dst/rep3/rep31
+--------------------------------------------------------------
+Date : Fri Nov 30 16:21:44 CET 2012
+Source directory : tests/src
+Destination directory : tests/dst
+
+[dst][-] tests/dst/rep3
+[dst][-] tests/dst/rep3/rep31
+--------------------------------------------------------------
+Date : Fri Nov 30 16:30:05 CET 2012
+Source directory : tests/src
+Destination directory : tests/dst
+
+[dst][-] tests/dst/file3
+[dst][-] tests/dst/log.txt
+[dst][-] tests/dst/rep3
+[dst][-] tests/dst/rep3/rep31
+[dst][-] tests/dst/rep3/rep31/file1
+[dst][-] tests/dst/test.txt
+--------------------------------------------------------------
+Date : Fri Nov 30 16:30:13 CET 2012
+Source directory : tests/src
+Destination directory : tests/dst
+
+[dst][-] tests/dst/file3
+[dst][-] tests/dst/log.txt
+[dst][-] tests/dst/rep3
+[dst][-] tests/dst/rep3/rep31
+[dst][-] tests/dst/rep3/rep31/file1
+[dst][-] tests/dst/test.txt
+--------------------------------------------------------------
+Date : Fri Nov 30 16:31:39 CET 2012
+Source directory : tests/src
+Destination directory : tests/dst
+
+[dst][-] tests/dst/file3
+[dst][-] tests/dst/log.txt
+[dst][-] tests/dst/rep3
+[dst][-] tests/dst/rep3/rep31
+[dst][-] tests/dst/rep3/rep31/file1
+[dst][-] tests/dst/test.txt
+--------------------------------------------------------------
+Date : Fri Nov 30 16:33:06 CET 2012
+Source directory : tests/src
+Destination directory : tests/dst
+
+[dst][-] tests/dst/rep3
+[dst][-] tests/dst/rep3/rep31
+--------------------------------------------------------------
+Date : Fri Nov 30 16:33:51 CET 2012
+Source directory : tests/src
+Destination directory : tests/dst
+
+[dst][-] tests/dst/rep3
+[dst][-] tests/dst/rep3/rep31
+--------------------------------------------------------------
+Date : Fri Nov 30 16:34:01 CET 2012
+Source directory : tests/src
+Destination directory : tests/dst
+
+[dst][-] tests/dst/rep3
+[dst][-] tests/dst/rep3/rep31
+--------------------------------------------------------------
+Date : Fri Nov 30 16:34:19 CET 2012
+Source directory : tests/src
+Destination directory : tests/dst
+
+[dst][-] tests/dst/rep3
+[dst][-] tests/dst/rep3/rep31
+--------------------------------------------------------------
+Date : Fri Nov 30 16:35:23 CET 2012
+Source directory : tests/src
+Destination directory : tests/dst
+
+[dst][-] tests/dst/log.txt
+[dst][-] tests/dst/rep3
+[dst][-] tests/dst/rep3/rep31
+[dst][-] tests/dst/test.txt
+--------------------------------------------------------------
+Date : Fri Nov 30 16:36:00 CET 2012
+Source directory : tests/src
+Destination directory : tests/dst
+
+[dst][-] tests/dst/log.txt
+[dst][-] tests/dst/rep3
+[dst][-] tests/dst/rep3/rep31
+[dst][-] tests/dst/test.txt
+--------------------------------------------------------------
+Date : Fri Nov 30 16:37:25 CET 2012
+Source directory : tests/src
+Destination directory : tests/dst
+
+[dst][-] tests/dst/log.txt
+[dst][-] tests/dst/rep3
+[dst][-] tests/dst/rep3/rep31
+[dst][-] tests/dst/test.txt
+--------------------------------------------------------------
+Date : Fri Nov 30 16:37:43 CET 2012
+Source directory : tests/src
+Destination directory : tests/dst
+
+[dst][-] tests/dst/log.txt
+[dst][-] tests/dst/rep3
+[dst][-] tests/dst/rep3/rep31
+[dst][-] tests/dst/test.txt
+--------------------------------------------------------------
+Date : Fri Nov 30 16:41:06 CET 2012
+Source directory : tests/src
+Destination directory : tests/dst
+
+[dst][-] tests/dst/log.txt
+[dst][-] tests/dst/rep3
+[dst][-] tests/dst/rep3/rep31
+[dst][-] tests/dst/test.txt
+--------------------------------------------------------------
+Date : Fri Nov 30 16:41:32 CET 2012
+Source directory : tests/src
+Destination directory : tests/dst
+
+[dst][-] tests/dst/rep3
+[dst][-] tests/dst/rep3/rep31
+--------------------------------------------------------------
+Date : Fri Nov 30 16:41:58 CET 2012
+Source directory : tests/src
+Destination directory : tests/dst
+
+[dst][-] tests/dst/file3
+[dst][-] tests/dst/log.txt
+[dst][-] tests/dst/rep3
+[dst][-] tests/dst/rep3/rep31
+[dst][-] tests/dst/rep3/rep31/file1
+[dst][-] tests/dst/test.txt
+--------------------------------------------------------------
+Date : Fri Nov 30 16:42:16 CET 2012
+Source directory : tests/src
+Destination directory : tests/dst
+
+[dst][-] tests/dst/file3
+[dst][-] tests/dst/log.txt
+[dst][-] tests/dst/rep3
+[dst][-] tests/dst/rep3/rep31
+[dst][-] tests/dst/rep3/rep31/file1
+[dst][-] tests/dst/test.txt
+--------------------------------------------------------------
+Date : Fri Nov 30 16:42:49 CET 2012
+Source directory : tests/src
+Destination directory : tests/dst
+
+[dst][-] tests/dst/log.txt
+[dst][-] tests/dst/rep3
+[dst][-] tests/dst/rep3/rep31
+[dst][-] tests/dst/test.txt
+--------------------------------------------------------------
+Date : Fri Nov 30 16:42:52 CET 2012
+Source directory : tests/src
+Destination directory : tests/dst
+
+[dst][-] tests/dst/log.txt
+[dst][-] tests/dst/rep3
+[dst][-] tests/dst/rep3/rep31
+[dst][-] tests/dst/test.txt
+--------------------------------------------------------------
+Date : Fri Nov 30 16:43:09 CET 2012
+Source directory : tests/src
+Destination directory : tests/dst
+
+[dst][-] tests/dst/log.txt
+[dst][-] tests/dst/rep3
+[dst][-] tests/dst/rep3/rep31
+[dst][-] tests/dst/test.txt
+--------------------------------------------------------------
+Date : Fri Nov 30 16:43:45 CET 2012
+Source directory : tests/src
+Destination directory : tests/dst
+
+[dst][-] tests/dst/log.txt
+[dst][-] tests/dst/rep3
+[dst][-] tests/dst/rep3/rep31
+[dst][-] tests/dst/test.txt
+--------------------------------------------------------------
+Date : Fri Nov 30 16:44:58 CET 2012
+Source directory : tests/src
+Destination directory : tests/dst
+
+[dst][-] tests/dst/log.txt
+[dst][-] tests/dst/rep3
+[dst][-] tests/dst/rep3/rep31
+[dst][-] tests/dst/test.txt
+--------------------------------------------------------------
+Date : Fri Nov 30 16:45:18 CET 2012
+Source directory : tests/src
+Destination directory : tests/dst
+
+[dst][-] tests/dst/log.txt
+[dst][-] tests/dst/rep3
+[dst][-] tests/dst/rep3/rep31
+[dst][-] tests/dst/test.txt
+--------------------------------------------------------------
+Date : Fri Nov 30 16:45:35 CET 2012
+Source directory : tests/src
+Destination directory : tests/dst
+
+[dst][-] tests/dst/log.txt
+[dst][-] tests/dst/rep3
+[dst][-] tests/dst/rep3/rep31
+[dst][-] tests/dst/test.txt
+--------------------------------------------------------------
+Date : Fri Nov 30 16:45:42 CET 2012
+Source directory : tests/src
+Destination directory : tests/dst
+
+[dst][-] tests/dst/log.txt
+[dst][-] tests/dst/rep3
+[dst][-] tests/dst/rep3/rep31
+[dst][-] tests/dst/test.txt
+--------------------------------------------------------------
+Date : Fri Nov 30 16:46:13 CET 2012
+Source directory : tests/src
+Destination directory : tests/dst
+
+[dst][-] tests/dst/log.txt
+[dst][-] tests/dst/rep3
+[dst][-] tests/dst/rep3/rep31
+[dst][-] tests/dst/test.txt
+--------------------------------------------------------------
+Date : Fri Nov 30 16:47:12 CET 2012
+Source directory : tests/src
+Destination directory : tests/dst
+
+[dst][-] tests/dst/log.txt
+[dst][-] tests/dst/rep3
+[dst][-] tests/dst/rep3/rep31
+[dst][-] tests/dst/test.txt
+--------------------------------------------------------------
+Date : Fri Nov 30 16:47:33 CET 2012
+Source directory : tests/src
+Destination directory : tests/dst
+
+[dst][-] tests/dst/log.txt
+[dst][-] tests/dst/rep3
+[dst][-] tests/dst/rep3/rep31
+[dst][-] tests/dst/test.txt
+--------------------------------------------------------------
+Date : Fri Nov 30 16:48:10 CET 2012
+Source directory : tests/src
+Destination directory : tests/dst
+
+[dst][-] tests/dst/log.txt
+[dst][-] tests/dst/rep3
+[dst][-] tests/dst/rep3/rep31
+[dst][-] tests/dst/test.txt
+--------------------------------------------------------------
+Date : Fri Nov 30 16:48:18 CET 2012
+Source directory : tests/src
+Destination directory : tests/dst
+
+[dst][-] tests/dst/log.txt
+[dst][-] tests/dst/rep3
+[dst][-] tests/dst/rep3/rep31
+[dst][-] tests/dst/test.txt
+--------------------------------------------------------------
+Date : Fri Nov 30 16:49:44 CET 2012
+Source directory : tests/src
+Destination directory : tests/dst
+
+[dst][-] tests/dst/rep3
+[dst][-] tests/dst/rep3/rep31
+--------------------------------------------------------------
+Date : Fri Nov 30 16:50:06 CET 2012
+Source directory : tests/src
+Destination directory : tests/dst
+
+[dst][-] tests/dst/rep3
+[dst][-] tests/dst/rep3/rep31
+--------------------------------------------------------------
+Date : Fri Nov 30 16:50:26 CET 2012
+Source directory : tests/src
+Destination directory : tests/dst
+
+[dst][-] tests/dst/rep3
+[dst][-] tests/dst/rep3/rep31
+--------------------------------------------------------------
+Date : Fri Nov 30 16:51:19 CET 2012
+Source directory : tests/src
+Destination directory : tests/dst
+
+[dst][-] tests/dst/rep3
+[dst][-] tests/dst/rep3/rep31
+--------------------------------------------------------------
+Date : Fri Nov 30 16:51:42 CET 2012
+Source directory : tests/src
+Destination directory : tests/dst
+
+[dst][-] tests/dst/rep3
+[dst][-] tests/dst/rep3/rep31
+--------------------------------------------------------------
+Date : Fri Nov 30 16:51:47 CET 2012
+Source directory : tests/src
+Destination directory : tests/dst
+
+[dst][-] tests/dst/rep3
+[dst][-] tests/dst/rep3/rep31
+--------------------------------------------------------------
+Date : Fri Nov 30 16:51:56 CET 2012
+Source directory : tests/src
+Destination directory : tests/dst
+
+[dst][-] tests/dst/rep3
+[dst][-] tests/dst/rep3/rep31
+--------------------------------------------------------------
+Date : Fri Nov 30 16:52:00 CET 2012
+Source directory : tests/src
+Destination directory : tests/dst
+
+[dst][-] tests/dst/rep3
+[dst][-] tests/dst/rep3/rep31
+--------------------------------------------------------------
+Date : Fri Nov 30 16:53:06 CET 2012
+Source directory : tests/src
+Destination directory : tests/dst
+
+[dst][-] tests/dst/rep3
+[dst][-] tests/dst/rep3/rep31
+--------------------------------------------------------------
+Date : Fri Nov 30 16:54:46 CET 2012
+Source directory : tests/src
+Destination directory : tests/dst
+
+[dst][-] tests/dst/rep3
+[dst][-] tests/dst/rep3/rep31
+--------------------------------------------------------------
+Date : Fri Nov 30 16:55:06 CET 2012
+Source directory : tests/src
+Destination directory : tests/dst
+
+[dst][-] tests/dst/rep3
+[dst][-] tests/dst/rep3/rep31
+--------------------------------------------------------------
+Date : Fri Nov 30 16:55:19 CET 2012
+Source directory : tests/src
+Destination directory : tests/dst
+
+[dst][-] tests/dst/log.txt
+[dst][-] tests/dst/rep3
+[dst][-] tests/dst/rep3/rep31
+[dst][-] tests/dst/test.txt
+--------------------------------------------------------------
+Date : Fri Nov 30 16:55:28 CET 2012
+Source directory : tests/src
+Destination directory : tests/dst
+
+[dst][-] tests/dst/rep3
+[dst][-] tests/dst/rep3/rep31
+--------------------------------------------------------------
+Date : Fri Nov 30 16:56:03 CET 2012
+Source directory : tests/src
+Destination directory : tests/dst
+
+[dst][-] tests/dst/rep3
+[dst][-] tests/dst/rep3/rep31
+--------------------------------------------------------------
+Date : Fri Nov 30 16:56:48 CET 2012
+Source directory : tests/src
+Destination directory : tests/dst
+
+[dst][-] tests/dst/rep3
+[dst][-] tests/dst/rep3/rep31
+--------------------------------------------------------------
+Date : Fri Nov 30 16:57:32 CET 2012
+Source directory : tests/src
+Destination directory : tests/dst
+
+[dst][-] tests/dst/rep3
+[dst][-] tests/dst/rep3/rep31
+--------------------------------------------------------------
+Date : Fri Nov 30 16:59:20 CET 2012
+Source directory : tests/src
+Destination directory : tests/dst
+
+[dst][-] tests/dst/rep3
+[dst][-] tests/dst/rep3/rep31
+--------------------------------------------------------------
+Date : Fri Nov 30 16:59:44 CET 2012
+Source directory : tests/src
+Destination directory : tests/dst
+
+[dst][-] tests/dst/rep3
+[dst][-] tests/dst/rep3/rep31
+--------------------------------------------------------------
+Date : Fri Nov 30 16:59:49 CET 2012
+Source directory : tests/src
+Destination directory : tests/dst
+
+[dst][-] tests/dst/rep3
+[dst][-] tests/dst/rep3/rep31
+--------------------------------------------------------------
+Date : Fri Nov 30 16:59:54 CET 2012
+Source directory : tests/src
+Destination directory : tests/dst
+
+[dst][-] tests/dst/rep3
+[dst][-] tests/dst/rep3/rep31
+--------------------------------------------------------------
+Date : Fri Nov 30 17:00:06 CET 2012
+Source directory : tests/src
+Destination directory : tests/dst
+
+[dst][-] tests/dst/log.txt
+[dst][-] tests/dst/rep3
+[dst][-] tests/dst/rep3/rep31
+[dst][-] tests/dst/test.txt
+--------------------------------------------------------------
+Date : Fri Nov 30 17:01:00 CET 2012
+Source directory : tests/src
+Destination directory : tests/dst
+
+[dst][-] tests/dst/log.txt
+[dst][-] tests/dst/rep3
+[dst][-] tests/dst/rep3/rep31
+[dst][-] tests/dst/test.txt
+--------------------------------------------------------------
+Date : Fri Nov 30 17:01:06 CET 2012
+Source directory : tests/src
+Destination directory : tests/dst
+
+[dst][-] tests/dst/log.txt
+[dst][-] tests/dst/rep3
+[dst][-] tests/dst/rep3/rep31
+[dst][-] tests/dst/test.txt
+--------------------------------------------------------------
+Date : Fri Nov 30 17:01:16 CET 2012
+Source directory : tests/src
+Destination directory : tests/dst
+
+[dst][-] tests/dst/log.txt
+[dst][-] tests/dst/rep3
+[dst][-] tests/dst/rep3/rep31
+[dst][-] tests/dst/test.txt
+--------------------------------------------------------------
+Date : Fri Nov 30 17:01:20 CET 2012
+Source directory : tests/src
+Destination directory : tests/dst
+
+[dst][-] tests/dst/log.txt
+[dst][-] tests/dst/rep3
+[dst][-] tests/dst/rep3/rep31
+[dst][-] tests/dst/test.txt
+--------------------------------------------------------------
+Date : Fri Nov 30 17:01:29 CET 2012
+Source directory : tests/src
+Destination directory : tests/dst
+
+[dst][-] tests/dst/log.txt
+[dst][-] tests/dst/rep3
+[dst][-] tests/dst/rep3/rep31
+[dst][-] tests/dst/test.txt
+--------------------------------------------------------------
+Date : Fri Nov 30 17:01:47 CET 2012
+Source directory : tests/src
+Destination directory : tests/dst
+
+[dst][-] tests/dst/log.txt
+[dst][-] tests/dst/rep3
+[dst][-] tests/dst/rep3/rep31
+[dst][-] tests/dst/testExt.pp
+[dst][-] tests/dst/test.txt
+--------------------------------------------------------------
+Date : Fri Nov 30 17:01:54 CET 2012
+Source directory : tests/src
+Destination directory : tests/dst
+
+[dst][-] tests/dst/log.txt
+[dst][-] tests/dst/rep3
+[dst][-] tests/dst/rep3/rep31
+[dst][-] tests/dst/testExt.pp
+[dst][-] tests/dst/test.txt
+--------------------------------------------------------------
+Date : Fri Nov 30 17:04:11 CET 2012
+Source directory : tests/src
+Destination directory : tests/dst
+
+[dst][-] tests/dst/log.txt
+[dst][-] tests/dst/rep3
+[dst][-] tests/dst/rep3/rep31
+[dst][-] tests/dst/test.txt
