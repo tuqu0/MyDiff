@@ -4,7 +4,8 @@
 # Printing functions
 # ================================================================================
 
-function PrintUsage () {
+# Display the help menu
+function PrintUsage() {
 	echo "
 Usage : ./mydiff.sh -s <src dir> -d <dst dir> [-c <comparison flags>] [-e <skip items>] [-f <file filter>] [-v <verbose level>] [-S] [-h]
 
@@ -32,7 +33,8 @@ Usage : ./mydiff.sh -s <src dir> -d <dst dir> [-c <comparison flags>] [-e <skip 
 "
 }
 
-function PrintMsg () {
+# Display errors depending of the defined verbose level
+function PrintMsg() {
 	local level=$1
 	local msg=$2
 
@@ -42,16 +44,55 @@ function PrintMsg () {
 	fi
 }
 
+# Write a message with a given item name in a log file.
+function LogDiff() {
+	local item=$1
+	local res=1
+
+	if [ $LOG_NEW_ENTRY -eq 1 ]
+	then
+		LOG_NEW_ENTRY=0
+		echo "--------------------------------------------------------------" >> $LOG_FILE
+		echo -n "date : " >> $LOG_FILE
+		echo `date` >> $LOG_FILE
+		echo "src  : $DIRPATH_SRC" >> $LOG_FILE
+		echo "dst  : $DIRPATH_DST" >> $LOG_FILE
+		echo "" >> $LOG_FILE
+	fi
+
+	if [ -f $LOG_FILE ]
+	then
+		echo "[dst][-] $item" >> $LOG_FILE
+		res=0
+	fi
+
+	return $res
+}
+
 # ================================================================================
 # Comparison functions
 # ================================================================================
 
+function DoSynchronize() {
+	local src=$1
+	local dst=$2
+
+	# TO DO...
+
+}
+
 # Compare two entities. It depend on the enabled flags (DIFF, MD5, PERM, LAST DATE MODIFIED)
 # If the entity is a directory, only the PERM test can be done (depending if the flag is enabled)
-function DoCompare () {
+function DoCompare() {
 	local res=1
 	local src=$1
 	local dst=$2
+
+	if [ ! -e $dst ]
+	then
+	 	PrintMsg 2 "[2][-] Test : 'existence' => $dst doesn't exist"	
+		return $res
+	fi
 
 	if [ $COMP_DIFF -eq 1 ] && [ ! -d $src ] && [ ! -d $dst ]
 	then
@@ -59,6 +100,7 @@ function DoCompare () {
 	 	res=$?
 		if [ $res -eq 1 ]
 		then
+			PrintMsg 2 "[2][-] Test: 'diff' => differences between $src and $dst"
 			return $res
 		fi
 	fi
@@ -69,16 +111,18 @@ function DoCompare () {
 		res=$?
 		if [ $res -eq 1 ]
 		then
+			PrintMsg 2 "[2][-] Test: 'md5' => differences between $src and $dst"
 			return $res
 		fi
 	fi
 
-	if [ $COMP_PERM -eq 1 ]
+	if [ $COMP_PERM -eq 1 ] || [ -d $dst ]
 	then
 		PermCompare $src $dst
 		res=$?
 		if [ $res -eq 1 ]
 		then
+			PrintMsg 2 "[2][-] Test : 'permission' => differences between $src and $dst"
 			return $res
 		fi
 	fi
@@ -89,6 +133,7 @@ function DoCompare () {
 		res=$?
 		if [ $res -eq 1 ]
 		then
+			PrintMsg 2 "[2][-] Test : 'last modification' => differences between $src and $dst"
 			return $res
 		fi
 	fi
@@ -96,21 +141,15 @@ function DoCompare () {
 	return $res
 }
 
-function DoSynchronize () {
-	local src=$1
-	local dst=$2
-
-	# TO DO...
-
-}
-
 # Compare the content between two files by using the "diff" command
-function DiffCompare () {
+function DiffCompare() {
 	local res=1
 	local src=$1
 	local dst=$2
+	local diff=""
 
-	if [ `diff $src` -eq `diff $dst` ]
+	diff=`diff $src $dst`
+	if [ $? -eq 0 ]
 	then
 		res=0
 	fi
@@ -119,7 +158,7 @@ function DiffCompare () {
 }
 
 # Check if two files have the same MD5 hash.
-function MD5Compare () {
+function MD5Compare() {
 	local res=1
 	local src=$1
 	local dst=$2
@@ -133,7 +172,7 @@ function MD5Compare () {
 }
 
 # Compare the unix permission format between two files
-function PermCompare () {
+function PermCompare() {
 	local res=1
 	local src=$1
 	local dst=$2
@@ -147,7 +186,7 @@ function PermCompare () {
 }
 
 # Compare the last time modification between two files
-function LastModifiedCompare () {
+function LastModifiedCompare() {
 	local res=1
 	local src=$1
 	local dst=$2
@@ -176,7 +215,7 @@ function  RemoveEndSlash() {
 }
 
 # Check if the DIRPATH_SRC and DIRPATH_DST variables are initialized
-function CheckInitVariables () {
+function CheckInitVariables() {
 	local src=$1
 	local dst=$2
 
@@ -187,27 +226,45 @@ function CheckInitVariables () {
 	fi
 }
 
-# Recursive function to list content of a directory
-function RecursiveDiff () {
+# Recursive function to explore a given source directory and compare it with a destination directory
+function RecursiveDiff() {
 	local res=0
+	local src=$1
+	local dst=$2
 	local dst_item=""
 
-	for src_item in $1/*
+	for src_item in $src/*
 	do
-		dst_item=$DIRPATH_DST${src_item:${#DIRPATH_SRC}:${#src_item}}
+		dst_item=$dst${src_item:${#DIRPATH_SRC}:${#src_item}} # deduction of the destination item from the source item
+
 		if [ -d $src_item ]
-		then
-			echo "src dir: $src_item"
-			echo "dst dir : $dst_item"
+		then			
 			DoCompare $src_item $dst_item
-			RecursiveDiff $src_item
-		elif [ -f $src_item ]
+			if [ $? -eq 1 ]
+			then
+				PrintMsg 1 "[1][-] Comparison : directories $src_item and $dst_item are different"
+				if [ $VERBOSE_LEVEL -ne 0 ]
+				then
+					echo " "
+				fi
+				LogDiff $dst_item
+			fi
+			RecursiveDiff $src_item $dst 
+		elif [ -e $src_item ]
 		then
-			echo "src file: $src_item"
-			echo "dst file : $dst_item"
 			DoCompare $src_item $dst_item
+			if [ $? -eq 1 ]
+			then
+				PrintMsg 1 "[1][-] Comparison : $src_item and $dst_item are different"
+				if [ $VERBOSE_LEVEL -ne 0 ]
+				then
+					echo " "
+				fi
+				LogDiff $dst_item
+			fi
 		fi
 	done
+
 	return $res
 }
 
@@ -227,6 +284,8 @@ COMP_DATE=0
 SYNCHRONIZE=0
 EXCLUDE=""
 FILTER=""
+LOG_FILE="myDiff.log"
+LOG_NEW_ENTRY=1
 
 VERBOSE_LEVEL=1
 VERBOSE_LEVEL_ERROR=0
@@ -313,5 +372,4 @@ done
 ############################# MAIN  ###############################
 
 CheckInitVariables $DIRPATH_SRC $DIRPATH_DST
-RecursiveDiff $DIRPATH_SRC
-
+RecursiveDiff $DIRPATH_SRC $DIRPATH_DST
