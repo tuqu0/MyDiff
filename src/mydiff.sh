@@ -23,6 +23,8 @@ Usage : ./mydiff.sh -s <src dir> -d <dst dir> [-c <comparison flags>] [-e <skip 
          e.g. : -e \"\.txt\$ logs\"
     -f <file filter>        = file pattern to find
          e.g. : -f \"*.txt\"
+    -l <output file>
+	 Default : \"myDiff.log\"
     -v <verbose level>      = verbose level
          0 = display nothing
          1 = display entity name if different
@@ -40,7 +42,7 @@ function PrintMsg() {
 
 	if [ $level -le $VERBOSE_LEVEL ]
 	then
-		echo $msg
+		echo "$msg"
 	fi
 }
 
@@ -53,10 +55,10 @@ function LogDiff() {
 	then
 		LOG_NEW_ENTRY=0
 		echo "--------------------------------------------------------------" >> $LOG_FILE
-		echo -n "date : " >> $LOG_FILE
+		echo -n "Date : " >> $LOG_FILE
 		echo `date` >> $LOG_FILE
-		echo "src  : $DIRPATH_SRC" >> $LOG_FILE
-		echo "dst  : $DIRPATH_DST" >> $LOG_FILE
+		echo "Source directory : $DIRPATH_SRC" >> $LOG_FILE
+		echo "Destination directory : $DIRPATH_DST" >> $LOG_FILE
 		echo "" >> $LOG_FILE
 	fi
 
@@ -90,7 +92,8 @@ function DoCompare() {
 
 	if [ ! -e $dst ]
 	then
-	 	PrintMsg 2 "[2][-] Test : 'existence' => $dst doesn't exist"	
+	 	PrintMsg 2 "[2][-] Test   : Existence"
+		PrintMsg 2 "   [-] Result : $dst doesn't exist"	
 		return $res
 	fi
 
@@ -100,7 +103,8 @@ function DoCompare() {
 	 	res=$?
 		if [ $res -eq 1 ]
 		then
-			PrintMsg 2 "[2][-] Test: 'diff' => differences between $src and $dst"
+			PrintMsg 2 "[2][-] Test   : Diff"
+			PrintMsg 2 "   [-] Result : Differences between $src and $dst"
 			return $res
 		fi
 	fi
@@ -111,7 +115,8 @@ function DoCompare() {
 		res=$?
 		if [ $res -eq 1 ]
 		then
-			PrintMsg 2 "[2][-] Test: 'md5' => differences between $src and $dst"
+			PrintMsg 2 "[2][-] Test   : MD5"
+			PrintMsg 2 "   [-] Result : Differences between $src and $dst"
 			return $res
 		fi
 	fi
@@ -122,7 +127,8 @@ function DoCompare() {
 		res=$?
 		if [ $res -eq 1 ]
 		then
-			PrintMsg 2 "[2][-] Test : 'permission' => differences between $src and $dst"
+			PrintMsg 2 "[2][-] Test   : Permissions"
+			PrintMsg 2 "   [-] Result : Differences between $src and $dst"
 			return $res
 		fi
 	fi
@@ -133,7 +139,8 @@ function DoCompare() {
 		res=$?
 		if [ $res -eq 1 ]
 		then
-			PrintMsg 2 "[2][-] Test : 'last modification' => differences between $src and $dst"
+			PrintMsg 2 "[2][-] Test   : Last Modified Date"
+			PrintMsg 2 "   [-] Result : Differences between $src and $dst"
 			return $res
 		fi
 	fi
@@ -152,6 +159,10 @@ function DiffCompare() {
 	if [ $? -eq 0 ]
 	then
 		res=0
+	else
+		PrintMsg 3 "[3][-] Test    : Diff"
+		PrintMsg 3 "   [-] Command : diff $src $dst"
+		PrintMsg 3 "   [-] Output  : $diff"
 	fi
 
 	return $res	
@@ -162,10 +173,16 @@ function MD5Compare() {
 	local res=1
 	local src=$1
 	local dst=$2
+	local md5src=`md5sum $src`
+	local md5dst=`md5sum $dst`
 
-	if [ `md5sum $src` == `md5sum $dst` ]
+	if [ $md5src == $md5dst ]
 	then
 		res=0
+	else
+		PrintMsg 3 "[3][-] Test    : MD5"
+		PrintMsg 3 "   [-] Command : Compare md5sum $src &&  md5sum $dst"
+		PrintMsg 3 "   [-] Output  : $md5src - $md5dst"
 	fi
 
 	return $res
@@ -176,10 +193,16 @@ function PermCompare() {
 	local res=1
 	local src=$1
 	local dst=$2
+	local permSrc=`stat -c %a $src`
+	local permDst=`stat -c %a $dst`
 
-	if [ `stat -c %a $src` -eq `stat -c %a $dst` ]
+	if [ $permSrc -eq $permDst ]
 	then
 		res=0
+	else
+		PrintMsg 3 "[3][-] Test    : Permissions"
+		PrintMsg 3 "   [-] Command : Compare stat -c %a $src && stat -c %a $dst"
+		PrintMsg 3 "   [-] Output  : $permSrc - $permDst"
 	fi
 
 	return $res
@@ -190,10 +213,16 @@ function LastModifiedCompare() {
 	local res=1
 	local src=$1
 	local dst=$2
+	local dateModifSrc=`stat -c %Y $src`
+	local dateModifDst=`stat -c %Y $dst`
 
-	if [ `stat -c %Y $src` -eq `stat -c %Y $dst` ]
+	if [ $dateModifSrc -eq $dateModifDst ]
 	then
 		res=0
+	else
+		PrintMsg 3 "[3][-] Test    : Last Modified Date"
+		PrintMsg 3 "   [-] Command : Compare stat -c %Y $src && stat -c %Y $dst"
+		PrintMsg 3 "   [-] Output  : $dateModifSrc - $dateModifDst"
 	fi
 
 	return $res
@@ -221,6 +250,8 @@ function CheckInitVariables() {
 
 	if [ "$1" == "" ] || [ "$2" == "" ]
 	then	
+		PrintMsg 3 "[3][myDiff] Test    : Check Variables Initialization"
+		PrintMsg 3 "   [myDiff] Result  : DIRPATH_SRC and/or DIRPATH_DST variables are not initialized"
 		PrintUsage
 		exit $ERROR_UNINITIALIZED_VARIABLE
 	fi
@@ -242,10 +273,11 @@ function RecursiveDiff() {
 			DoCompare $src_item $dst_item
 			if [ $? -eq 1 ]
 			then
-				PrintMsg 1 "[1][-] Comparison : directories $src_item and $dst_item are different"
+				PrintMsg 1 "[1][-] Test   : Comparison"
+				PrintMsg 1 "   [-] Result : Directories $src_item and $dst_item mismatch"
 				if [ $VERBOSE_LEVEL -ne 0 ]
 				then
-					echo " "
+					printf '\n\n'
 				fi
 				LogDiff $dst_item
 			fi
@@ -255,10 +287,11 @@ function RecursiveDiff() {
 			DoCompare $src_item $dst_item
 			if [ $? -eq 1 ]
 			then
-				PrintMsg 1 "[1][-] Comparison : $src_item and $dst_item are different"
+				PrintMsg 1 "[1][-] Test   : Comparison"
+			        PrintMsg 1 "   [-] Result : $src_item and $dst_item mismatch"
 				if [ $VERBOSE_LEVEL -ne 0 ]
 				then
-					echo " "
+					printf '\n\n'	
 				fi
 				LogDiff $dst_item
 			fi
@@ -300,7 +333,7 @@ ERROR_UNINITIALIZED_VARIABLE=2
 ############################# ARGUMENTS ANALYSIS ###############################
 
 # Options parser and arguments initialization
-while getopts "s:d:c:e:f:v:Sh" opt
+while getopts "s:d:c:e:f:l:v:Sh" opt
 do
 	case $opt in
 	's')
@@ -326,6 +359,8 @@ do
 				COMP_DATE=1
 				;;
 			?)
+				PrintMsg 3 "[3][myDiff] Test   : Option checking"
+			        PrintMsg 3 "   [myDiff] Result : Option '-c' has an invalid parameter"
 				PrintUsage
 				exit $ERROR_INVALID_OPTION
 			esac
@@ -336,6 +371,9 @@ do
 		;;
 	'f')
 		FILTER=$OPTARG
+		;;
+	'l')	
+		LOG_FILE=$OPTARG
 		;;
 	'v')
 		case $OPTARG in
@@ -352,6 +390,8 @@ do
 			VERBOSE_LEVEL=$VERBOSE_LEVEL_ALL
 			;;
 		?)
+			PrintMsg 3 "[3][myDiff] Test   : Option Checking"
+			PrintMsg 3 "   [myDiff] Result : Option '-v' has an invalid verbose level"
 			PrintUsage
 			exit $ERROR_INVALID_OPTION
 		esac
@@ -364,6 +404,8 @@ do
 		exit $SUCCESS
 		;;
 	?)
+		PrintMsg 3 "[3][myDiff] Test   : Option Checking"
+	 	PrintMsg 3 "   [myDiff] Result : Option is not valid"
 		PrintUsage
 		exit $ERROR_INVALID_OPTION
 	esac
