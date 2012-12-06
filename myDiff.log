@@ -1,0 +1,30 @@
+--------------------------------------------------------------
+Date : jeudi 6 décembre 2012, 01:57:59 (UTC+0100)
+Source directory : tests/src
+Destination directory : tests/dst
+
+[dst][-] tests/dst/file3
+[dst][-] tests/dst/log.txt
+[dst][-] tests/dst/rep3/rep31
+[dst][-] tests/dst/rep3/rep31/file1
+[dst][-] tests/dst/test.txt
+--------------------------------------------------------------
+Date : jeudi 6 décembre 2012, 01:58:05 (UTC+0100)
+Source directory : tests/src
+Destination directory : tests/dst
+
+[dst][-] tests/dst/file3
+[dst][-] tests/dst/log.txt
+[dst][-] tests/dst/rep3/rep31
+[dst][-] tests/dst/rep3/rep31/file1
+[dst][-] tests/dst/test.txt
+--------------------------------------------------------------
+Date : jeudi 6 décembre 2012, 01:58:10 (UTC+0100)
+Source directory : tests/src
+Destination directory : tests/dst
+
+[dst][-] tests/dst/file3
+[dst][-] tests/dst/log.txt
+[dst][-] tests/dst/rep3/rep31
+[dst][-] tests/dst/rep3/rep31/file1
+[dst][-] tests/dst/test.txt
