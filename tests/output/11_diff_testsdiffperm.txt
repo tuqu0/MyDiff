@@ -1,0 +1,42 @@
+================================================================================
+   Synchronisation des arborescences de test. Comparaison avec les tests diff, md5 et permissions.
+================================================================================
+# ./mydiff.sh -s /tmp/test/src/ -d /tmp/test/dst/ -v 2 -S -c "d m p"
+Checking rights...............................................DIFFERENT
+755 != 711
+Directories "/tmp/test/src//./rep3" and "/tmp/test/dst//./rep3" are different
+--------------------------------------------------------------------------------
+Synchronizing "/tmp/test/src//./rep3" => "/tmp/test/dst//./rep3"
+--------------------------------------------------------------------------------
+Checking user.................................................DIFFERENT
+root != bin
+Directories "/tmp/test/src//./rep1" and "/tmp/test/dst//./rep1" are different
+--------------------------------------------------------------------------------
+Synchronizing "/tmp/test/src//./rep1" => "/tmp/test/dst//./rep1"
+--------------------------------------------------------------------------------
+Checking group................................................DIFFERENT
+root != tty
+Directories "/tmp/test/src//./rep2/rep21" and "/tmp/test/dst//./rep2/rep21" are different
+--------------------------------------------------------------------------------
+Synchronizing "/tmp/test/src//./rep2/rep21" => "/tmp/test/dst//./rep2/rep21"
+--------------------------------------------------------------------------------
+Checking user.................................................DIFFERENT
+root != sync
+Files "/tmp/test/src//./rep1/rep11/file1" and "/tmp/test/dst//./rep1/rep11/file1" are different
+--------------------------------------------------------------------------------
+Synchronizing "/tmp/test/src//./rep1/rep11/file1" => "/tmp/test/dst//./rep1/rep11/file1"
+--------------------------------------------------------------------------------
+Checking rights...............................................DIFFERENT
+755 != 777
+Files "/tmp/test/src//./rep1/rep11/rep111/file1" and "/tmp/test/dst//./rep1/rep11/rep111/file1" are different
+--------------------------------------------------------------------------------
+Synchronizing "/tmp/test/src//./rep1/rep11/rep111/file1" => "/tmp/test/dst//./rep1/rep11/rep111/file1"
+--------------------------------------------------------------------------------
+Checking rights...............................................DIFFERENT
+755 != 477
+Checking group................................................DIFFERENT
+root != bin
+Files "/tmp/test/src//./rep2/rep22/file1" and "/tmp/test/dst//./rep2/rep22/file1" are different
+--------------------------------------------------------------------------------
+Synchronizing "/tmp/test/src//./rep2/rep22/file1" => "/tmp/test/dst//./rep2/rep22/file1"
+--------------------------------------------------------------------------------

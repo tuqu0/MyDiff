@@ -1,0 +1,4 @@
+================================================================================
+   Affichage des différences sur les arborescences de test. Comparaison avec les tests diff, md5 et permissions. Affichage de tous les tests effectués
+================================================================================
+# ./mydiff.sh -s /tmp/test/src/ -d /tmp/test/dst/ -c "d m p"

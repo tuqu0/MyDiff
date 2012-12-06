@@ -1,0 +1,23 @@
+================================================================================
+   Affichage des différences sur les arborescences de test. Comparaison avec les tests diff, md5 et permissions. Affichage de tous les tests effectués
+================================================================================
+# ./mydiff.sh -s /tmp/test/src/ -d /tmp/test/dst/ -c "d m p"
+Checking rights...............................................DIFFERENT
+Directories "/tmp/test/src//./rep3" and "/tmp/test/dst//./rep3" are different
+--------------------------------------------------------------------------------
+Checking user.................................................DIFFERENT
+Directories "/tmp/test/src//./rep1" and "/tmp/test/dst//./rep1" are different
+--------------------------------------------------------------------------------
+Checking group................................................DIFFERENT
+Directories "/tmp/test/src//./rep2/rep21" and "/tmp/test/dst//./rep2/rep21" are different
+--------------------------------------------------------------------------------
+Checking user.................................................DIFFERENT
+Files "/tmp/test/src//./rep1/rep11/file1" and "/tmp/test/dst//./rep1/rep11/file1" are different
+--------------------------------------------------------------------------------
+Checking rights...............................................DIFFERENT
+Files "/tmp/test/src//./rep1/rep11/rep111/file1" and "/tmp/test/dst//./rep1/rep11/rep111/file1" are different
+--------------------------------------------------------------------------------
+Checking rights...............................................DIFFERENT
+Checking group................................................DIFFERENT
+Files "/tmp/test/src//./rep2/rep22/file1" and "/tmp/test/dst//./rep2/rep22/file1" are different
+--------------------------------------------------------------------------------

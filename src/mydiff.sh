@@ -391,7 +391,7 @@ function CheckInitSrcDestVar() {
 		PrintMsg 3 "$RED[3][CheckInitSrcDestVar] Test    : DIRPATH_SRC and DIRPATH_DST variables initialization" 
 		PrintMsg 3 "$RED   [CheckInitSrcDestVar] Result  : DIRPATH_SRC and/or DIRPATH_DST is/are not initialized"
 		PrintUsage
-    tput sgr0
+		tput sgr0
 		exit $ERROR_UNINITIALIZED_VARIABLE
 	fi
 }
@@ -663,7 +663,7 @@ do
 			PrintMsg 3 "$RED[3][getopts] Test   : Option checking"
 			PrintMsg 3 "$RED   [getopts] Result : Option '-m' has an invalid parameter"
 			PrintUsage
-      tput sgr0
+			tput sgr0
 			exit $ERROR_INVALID_OPTION
 		esac
 		;;
@@ -688,7 +688,7 @@ do
 				PrintMsg 3 "$RED[3][getopts] Test   : Option checking"
 				PrintMsg 3 "$RED   [getopts] Result : Option '-c' has an invalid parameter"
 				PrintUsage
-        tput sgr0
+				tput sgr0
 				exit $ERROR_INVALID_OPTION
 			esac
 		done
@@ -738,7 +738,7 @@ do
 			PrintMsg 3 "$RED[3][getopts] Test   : Option Checking"
 			PrintMsg 3 "$RED   [getopts] Result : Option '-v' has an invalid verbose level"
 			PrintUsage
-      tput sgr0
+			tput sgr0
 			exit $ERROR_INVALID_OPTION
 		esac
 		;;
@@ -749,7 +749,7 @@ do
 
 	'h')	# help menu
 		PrintUsage
-    tput sgr0
+		tput sgr0
 		exit $SUCCESS
 		;;
 
@@ -757,7 +757,7 @@ do
 		PrintMsg 3 "$RED[3][getopts] Test   : Option Checking"
 	 	PrintMsg 3 "$RED   [getopts] Result : Option is not valid"
 		PrintUsage
-    tput sgr0
+		tput sgr0
 		exit $ERROR_INVALID_OPTION
 	esac
 done
