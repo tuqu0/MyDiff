@@ -69,9 +69,9 @@ function PrintMsg() {
 	fi
 }
 
-# Write a message in a log file.
+# Write a message with a given entity name in a log file.
 function LogDiff() {
-	local msg=$1
+	local entity=$1
 
 	# First call to the function => insert an header in the log file
 	if [ $LOG_NEW_ENTRY -eq 1 ]
@@ -85,7 +85,7 @@ function LogDiff() {
 		echo "" >> $LOG_FILE
 	fi
 
-	printf "$msg\n" >> $LOG_FILE
+	echo "[dst][-] $entity" >> $LOG_FILE
 }
 
 
@@ -109,6 +109,7 @@ function DoSynchronize() {
 		# the destination directory does not exist
 		if [ ! -d $dst ]
 		then
+			PrintMsg 3 "$GREEN Syncing directory from \"$src\" to \"$dst\"\n"
 			mkdir $dst	
 		fi
 	else # the source entity is a file => merge
@@ -116,14 +117,23 @@ function DoSynchronize() {
 		then
 			touch $dst
 		fi
+		PrintMsg 3 "$GREEN Syncing file content from \"$src\" to \"$dst\"\n"
 		merge=`echo l | sdiff -o $dst $src $dst`
 	fi
 
 	# Apply permissions, user and group owner, last modified date on the destination entity
 	SetPermissions $dst "777"
+
+	PrintMsg 3 "$GREEN Syncing last modified date from \"$src\" to \"$dst\"\n"
 	SetLastModifiedDate $dst "$lastModifiedDate"
+
+	PrintMsg 3 "$GREEN Syncing user owner from \"$src\" to \"$dst\"\n"
 	SetOwnerUser $dst $userOwner
+
+	PrintMsg 3 "$GREEN Syncing group owner from \"$src\" to \"$dst\"\n"
 	SetOwnerGroup $dst $groupOwner
+
+	PrintMsg 3 "$GREEN Syncing permissions from \"$src\" to \"$dst\"\n"
 	SetPermissions $dst $perm
 }
 
@@ -139,7 +149,6 @@ function DoCompare() {
 	if [ ! -e $dst ]
 	then
 		PrintMsg 2 "$BLUE Entity \"$dst\" doesn't exist\n"
-		LogDiff "Entity \"$dst\" doesn't exist\n"
 		res=1
 		return $res
 	fi
@@ -151,11 +160,9 @@ function DoCompare() {
 	 	if [ $? -eq 1 ]
 		then
 			PrintMsg 2 "$BLUE Checking diff.....................................................DIFFERENT\n"
-			LogDiff "Checking diff.....................................................DIFFERENT\n"
 			res=1
 		else
 			PrintMsg 2 "$BLUE Checking diff.........................................................IDENT\n"
-			LogDiff "Checking diff.........................................................IDENT\n"
 		fi
 	fi
 
@@ -166,11 +173,9 @@ function DoCompare() {
 		if [ $? -eq 1 ]
 		then
 			PrintMsg 2 "$BLUE Checking md5......................................................DIFFERENT\n"
-			LogDiff "Checking md5......................................................DIFFERENT\n"
 			res=1
 		else
 			PrintMsg 2 "$BLUE Checking md5..........................................................IDENT\n"
-			LogDiff "Checking md5..........................................................IDENT\n"
 		fi
 	fi
 
@@ -181,33 +186,9 @@ function DoCompare() {
 		if [ $? -eq 1 ]
 		then
 			PrintMsg 2 "$BLUE Checking rights...................................................DIFFERENT\n"
-			LogDiff "Checking rights...................................................DIFFERENT\n"
 			res=1
 		else
 			PrintMsg 2 "$BLUE Checking rights.......................................................IDENT\n"
-			LogDiff "Checking rights.......................................................IDENT\n"
-		fi
-
-		UserOwnerCompare $src $dst
-		if [ $? -eq 1 ]
-		then
-			PrintMsg 2 "$BLUE Checking user.....................................................DIFFERENT\n"
-			LogDiff "Checking user.....................................................DIFFERENT\n"
-			res=1
-		else
-			PrintMsg 2 "$BLUE Checking user.........................................................IDENT\n"
-			LogDiff "Checking user.........................................................IDENT\n"	
-		fi
-
-		GroupOwnerCompare $src $dst
-		if [ $? -eq 1 ]
-		then
-			PrintMsg 2 "$BLUE Checking group....................................................DIFFERENT\n"
-			LogDiff "Checking group....................................................DIFFERENT\n"	
-			res=1
-		else
-			PrintMsg 2 "$BLUE Checking group........................................................IDENT\n"
-			LogDiff "Checking group........................................................IDENT\n"
 		fi
 	fi
 
@@ -218,12 +199,29 @@ function DoCompare() {
 		if [ $? -eq 1 ]
 		then
 			PrintMsg 2 "$BLUE Checking date.....................................................DIFFERENT\n"
-			LogDiff "Checking date.....................................................DIFFERENT\n"
 			res=1
 		else
 			PrintMsg 2 "$BLUE Checking date.........................................................IDENT\n"
-			LogDiff "Checking date.........................................................IDENT\n"
 		fi
+		
+		UserOwnerCompare $src $dst
+		if [ $? -eq 1 ]
+		then
+			PrintMsg 2 "$BLUE Checking user.....................................................DIFFERENT\n"
+			res=1
+		else
+			PrintMsg 2 "$BLUE Checking user.........................................................IDENT\n"		
+		fi
+
+		GroupOwnerCompare $src $dst
+		if [ $? -eq 1 ]
+		then
+			PrintMsg 2 "$BLUE Checking group....................................................DIFFERENT\n"		
+			res=1
+		else
+			PrintMsg 2 "$BLUE Checking group........................................................IDENT\n"	
+		fi
+		
 	fi
 	
 	return $res
@@ -241,7 +239,6 @@ function DiffCompare() {
 		res=0
 	else
 		PrintMsg 3 "$RED $diff"
-		LogDiff "$diff"
 	fi
 	
 	return $res
@@ -260,7 +257,6 @@ function MD5Compare() {
 		res=0
 	else
 		PrintMsg 3 "$RED $md5src != $md5dst"
-		LogDiff "$md5src != $md5dst"
 	fi
 
 	return $res
@@ -279,7 +275,6 @@ function PermCompare() {
 		res=0
 	else
 		PrintMsg 3 "$RED $permSrc != $permDst"
-		LogDiff "$permSrc != $permDst"
 	fi
 
 	return $res
@@ -298,7 +293,6 @@ function LastModifiedCompare() {
 		res=0
 	else
 		PrintMsg 3 "$RED $dateModifSrc != $dateModifDst"
-		LogDiff "$dateModifSrc != $dateModifDst"
 	fi
 
 	return $res
@@ -317,7 +311,6 @@ function UserOwnerCompare() {
 		res=0
 	else
 		PrintMsg 3 "$RED $userSrc != $userDst"
-		LogDiff "$userSrc != $userDst"
 	fi
 
 	return $res
@@ -336,7 +329,6 @@ function GroupOwnerCompare() {
 		res=0
 	else
 		PrintMsg 3 "$RED $groupSrc != $groupDst"
-		LogDiff "$groupSrc != $groupDst"
 	fi
 
 	return $res
@@ -436,8 +428,7 @@ function CheckInitSrcDestVar() {
 
 	if [ "$DIRPATH_SRC" == "" ] || [ "$DIRPATH_DST" == "" ] || [ ! -d $DIRPATH_SRC ] || [ ! -d $DIRPATH_DST ]
 	then	
-		PrintMsg 3 "$RED Variables DIRPATH_SRC and DIRPATH_DST are not initialized\n"
-		LogDiff "Variables DIRPATH_SRC and DIRPATH_DST are not initialized\n"
+		PrintMsg 3 "$RED Variables DIRPATH_SRC and DIRPATH_DST are not initialized"
 		PrintUsage
 		tput sgr0
 		exit $ERROR_UNINITIALIZED_VARIABLE
@@ -464,10 +455,8 @@ function CheckExtensionExclusions() {
 			# compare the entity extension with each extension in the list
 			if [ `GetFileExtension $src_entity` == $ext ]
 			then
-				PrintMsg 3 "$RED \"$src\" will not be checked (extension exclusion)\n"
+				PrintMsg 3 "$RED \"$src\" will not be checked (extension exclusion)"
 				PrintMsg 1 "$WHITE\n********************************************************************************\n"
-				LogDiff "\"$src\" will not be checked (extension exclusion)\n"
-				LogDiff "********************************************************************************\n"
 				res=1
 				return $res
 			fi
@@ -493,10 +482,8 @@ function CheckPathnameExclusions() {
 			res=$?
 			if [ $res -eq 0 ]
 			then
-				PrintMsg 3 "$RED \"$src\" will not be checked (keyword exclusion)\n"
+				PrintMsg 3 "$RED \"$src\" will not be checked (keyword exclusion)"
 				PrintMsg 1 "$WHITE\n********************************************************************************\n"
-				LogDiff "\"$src\" will not be checked (keyword exclusion)\n"
-				LogDiff "********************************************************************************\n"
 				return $res
 			fi
 		done
@@ -523,10 +510,8 @@ function CheckExtensionFilters() {
 
 	if [ $res -eq 0 ]
 	then
-		PrintMsg 3 "$RED \"$src\" will not be checked (extension filter)\n"
+		PrintMsg 3 "$RED \"$src\" will not be checked (extension filter)"
 		PrintMsg 1 "$WHITE\n********************************************************************************\n"
-		LogDiff "\"$src\" will not be checked (extension filter)\n"
-		LogDiff "********************************************************************************\n"
 	fi
 
 	return $res
@@ -568,15 +553,13 @@ function RecursiveDiff() {
 					then
 						DoSynchronize $src_entity $dst_entity
 					fi
-					PrintMsg 1 "$YELLOW Directories \"$src_entity\" and \"$dst_entity\" are different\n"
-					LogDiff "Directories \"$src_entity\" and \"$dst_entity\" are different\n"
+					PrintMsg 1 "$YELLOW Directories \"$src_entity\" and \"$dst_entity\" are different"
+					LogDiff $dst_entity
 					ret=$ERROR_MISMATCH
 				else
-					PrintMsg 1 "$YELLOW Directories \"$src_entity\" and \"$dst_entity\" are identical\n"
-					LogDiff "Directories \"$src_entity\" and \"$dst_entity\" are identical\n"
+					PrintMsg 1 "$YELLOW Directories \"$src_entity\" and \"$dst_entity\" are identical"
 				fi
 				PrintMsg 1 "$WHITE\n********************************************************************************\n"
-				LogDiff "********************************************************************************\n"
 			fi
 			# recursive function call from the current sub directory
 			RecursiveDiff $src_entity $dst
@@ -619,15 +602,12 @@ function RecursiveDiff() {
 					then
 						DoSynchronize $src_entity $dst_entity
 					fi
-					PrintMsg 1 "$YELLOW Files \"$src_entity\" and \"$dst_entity\" are different\n"
-					LogDiff "Files \"$src_entity\" and \"$dst_entity\" are different\n"
-					ret=$ERROR_MISMATCH
+					PrintMsg 1 "$YELLOW Files \"$src_entity\" and \"$dst_entity\" are different"
+					LogDiff $dst_entity
 				else
-					PrintMsg 1 "$YELLOW Files \"$src_entity\" and \"$dst_entity\" are identical\n"
-					LogDiff "Files \"$src_entity\" and \"$dst_entity\" are identical\n"
+					PrintMsg 1 "$YELLOW Files \"$src_entity\" and \"$dst_entity\" are identical"
 				fi
 				PrintMsg 1 "$WHITE\n********************************************************************************\n"
-				LogDiff "********************************************************************************\n"
 			fi 
 		fi
 		res=0
@@ -716,8 +696,7 @@ do
 			ANALYSIS_MODE=1
 			;;
 		?)
-			PrintMsg 3 "$RED Option '-m' has an invalid parameter\n"
-			LogDiff "Option '-m' has an invalid parameter\n"
+			PrintMsg 3 "$RED Option '-m' has an invalid parameter"
 			PrintUsage
 			tput sgr0
 			exit $ERROR_INVALID_OPTION
@@ -741,8 +720,7 @@ do
 				COMP_DATE=1
 				;;
 			?)
-				PrintMsg 3 "$RED Option '-c' has an invalid parameter\n"
-				LogDiff "Option '-c' has an invalid parameter\n"
+				PrintMsg 3 "$RED Option '-c' has an invalid parameter"
 				PrintUsage
 				tput sgr0
 				exit $ERROR_INVALID_OPTION
@@ -791,8 +769,7 @@ do
 			VERBOSE_LEVEL=$VERBOSE_LEVEL_ALL
 			;;
 		?)
-			PrintMsg 3 "$RED Option '-v' has an invalid verbose level\n"
-			LogDiff "Option '-v' has an invalid verbose level\n"
+			PrintMsg 3 "$RED Option '-v' has an invalid verbose level"
 			PrintUsage
 			tput sgr0
 			exit $ERROR_INVALID_OPTION
@@ -810,8 +787,7 @@ do
 		;;
 
 	?)	# unknown option
-	 	PrintMsg 3 "$RED Option is not valid\n"
-		LogDiff "Option is not valid\n"
+	 	PrintMsg 3 "$RED Option is not valid"
 		PrintUsage
 		tput sgr0
 		exit $ERROR_INVALID_OPTION
@@ -832,26 +808,17 @@ CheckInitSrcDestVar
 if [ $ANALYSIS_MODE -eq 1 ]
 then
 	RecursiveDiff $DIRPATH_SRC $DIRPATH_DST
-	ret=$?
-	PrintMsg 0 "$CYAN # ======================================================== #"
-	PrintMsg 0 "$CYAN #                          MyDiff                          #"
-	PrintMsg 0 "$CYAN # ======================================================== #\n"
-	PrintMsg 0 "$CYAN Mode         : Récursif"
+  PrintMsg 0 "$CYAN # ======================================================== #"
+  PrintMsg 0 "$CYAN #                          MyDiff                          #"
+  PrintMsg 0 "$CYAN # ======================================================== #\n"
+  PrintMsg 0 "$CYAN Mode         : Récursif"
+ 	ret=$?
 else
 	IterativeDiff $DIRPATH_SRC $DIRPATH_DST
-	ret=$?
-	PrintMsg 0 "$CYAN # ======================================================= #"
-	PrintMsg 0 "$CYAN #                          MyDiff                         #"
-	PrintMsg 0 "$CYAN # ======================================================= #\n"
-	PrintMsg 0 "$CYAN Mode         : Itératif"
-fi
-
-# Comparison between src and dst result
-if [ $ret -eq $ERROR_MISMATCH ]
-then
-	PrintMsg 0 "$CYAN Comparison   : $DIRPATH_SRC and $DIRPATH_DST are different"
-else
-	PrintMsg 0 "$CYAN Comparison   : $DIRPATH_SRC and $DIRPATH_DST are identical"
+  PrintMsg 0 "$CYAN # ======================================================= #"
+  PrintMsg 0 "$CYAN #                          MyDiff                         #"
+  PrintMsg 0 "$CYAN # ======================================================= #\n"
+  PrintMsg 0 "$CYAN Mode         : Itératif"
 fi
 
 # calculate elapsed time
