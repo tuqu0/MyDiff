@@ -82,6 +82,7 @@ function LogDiff() {
 		echo `date` >> $LOG_FILE
 		echo "Source directory : $DIRPATH_SRC" >> $LOG_FILE
 		echo "Destination directory : $DIRPATH_DST" >> $LOG_FILE
+		echo "--------------------------------------------------------------" >> $LOG_FILE
 		echo "" >> $LOG_FILE
 	fi
 
@@ -636,26 +637,109 @@ function RecursiveDiff() {
 	return $ret
 }
 
+# Iterative function to explore a given source directory and compare it with a destination directory
+# Returns 0 if DIRPATH_SRC and DIRPATH_DST are similar, else 1
 function IterativeDiff() {
-	src=$1
-	dst=$2
-	
-	echo "src : $src"
-	echo "dst : $dst"
-
-	# enter in the source directory
-	cd $src
+	local res=0
+	local ret=0
+	local extExclusions=0
+	local pathnameExclusions=0
+	local extFilters=0
+	local src=$1
+	local dst=$2
+	local dst_entity=""
 
 	# list all directories in the source directory
-	for src_entity in `find . -type d`
+	for src_entity in `find $src -type d`
 	do
-		echo "dir : $src_entity"
+		if [ "$src_entity" != "$src" ]
+		then
+			# deduction of the dst entity from the src entity path
+			dst_entity=$dst${src_entity:${#DIRPATH_SRC}:${#src_entity}}
+
+			CheckPathnameExclusions $src_entity
+			pathnameExclusions=$?
+
+			# if the entity does not contain a pattern from the exclusion list
+			if [ $pathnameExclusions -ne 0 ]
+			then
+				# comparison
+				DoCompare $src_entity $dst_entity
+				res=$?	
+				# if src and dst are differents
+				if [ $res -eq 1 ] 
+				then
+					if [ $SYNCHRONIZE -eq 1 ]
+					then
+						DoSynchronize $src_entity $dst_entity
+					fi
+					PrintMsg 1 "$YELLOW Directories \"$src_entity\" and \"$dst_entity\" are different\n"
+					LogDiff "Directories \"$src_entity\" and \"$dst_entity\" are different\n"
+					ret=$ERROR_MISMATCH
+				else
+					PrintMsg 1 "$YELLOW Directories \"$src_entity\" and \"$dst_entity\" are identical\n"
+					LogDiff "Directories \"$src_entity\" and \"$dst_entity\" are identical\n"
+				fi
+				PrintMsg 1 "$WHITE\n********************************************************************************\n"
+				LogDiff "********************************************************************************\n"
+			fi
+		fi
 	done
 
-	for src_entity in `find . -type f`
+	for src_entity in `find $src -type f`
 	do
-		echo "file : $src_entity"
+		if [ "$src_entity" != "$src" ]
+		then
+			# deduction of the dst entity from the src entity path
+			dst_entity=$dst${src_entity:${#DIRPATH_SRC}:${#src_entity}}
+
+			CheckExtensionExclusions $src_entity
+			extExclusions=$?
+
+			CheckPathnameExclusions $src_entity
+			pathnameExclusions=$?
+
+			# if the file extension is not in the exclusion list and no pattern
+			if [ $extExclusions -eq 0 ] && [ $pathnameExclusions -ne 0 ]
+			then
+				# if filters have been set
+				if [ "$FILTER" != "" ]
+				then
+					CheckExtensionFilters $src_entity
+					extFilters=$?
+					# if the entity extension is in the filters list
+					if [ $extFilters -eq 1 ]
+					then
+						# comparison
+						DoCompare $src_entity $dst_entity
+						res=$?
+					fi
+				else
+					# no filter defined
+					DoCompare $src_entity $dst_entity
+					res=$?
+				fi
+
+				# if src and dst entities are differents
+				if [ $res -eq 1 ]
+				then
+					if [ $SYNCHRONIZE -eq 1 ]
+					then
+						DoSynchronize $src_entity $dst_entity
+					fi
+					PrintMsg 1 "$YELLOW Files \"$src_entity\" and \"$dst_entity\" are different\n"
+					LogDiff "Files \"$src_entity\" and \"$dst_entity\" are different\n"
+					ret=$ERROR_MISMATCH
+				else
+					PrintMsg 1 "$YELLOW Files \"$src_entity\" and \"$dst_entity\" are identical\n"
+					LogDiff "Files \"$src_entity\" and \"$dst_entity\" are identical\n"
+				fi
+				PrintMsg 1 "$WHITE\n********************************************************************************\n"
+				LogDiff "********************************************************************************\n"
+			fi 
+		fi
 	done
+	return $ret
 }
 # ================================================================================
 # Beginning of script
