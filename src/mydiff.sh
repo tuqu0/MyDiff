@@ -622,16 +622,20 @@ function RecursiveDiff() {
 					fi
 					PrintMsg 1 "$YELLOW Files \"$src_entity\" and \"$dst_entity\" are different\n"
 					LogDiff "Files \"$src_entity\" and \"$dst_entity\" are different\n"
+					PrintMsg 1 "$WHITE\n********************************************************************************\n"
+					LogDiff "********************************************************************************\n"
 					ret=$ERROR_MISMATCH
-				else
+				elif [ "$FILTER" == "" ] || [ $extFilters -eq 1 ]
+				then
 					PrintMsg 1 "$YELLOW Files \"$src_entity\" and \"$dst_entity\" are identical\n"
 					LogDiff "Files \"$src_entity\" and \"$dst_entity\" are identical\n"
+					PrintMsg 1 "$WHITE\n********************************************************************************\n"
+					LogDiff "********************************************************************************\n"
 				fi
-				PrintMsg 1 "$WHITE\n********************************************************************************\n"
-				LogDiff "********************************************************************************\n"
 			fi 
 		fi
 		res=0
+		extFilters=0
 	done
 
 	return $ret
