@@ -6,7 +6,8 @@
 # Version : 0.1 
 # Author  : Puydoyeux Vincent
 # Date    : 06/12/2012 
-# OS      : tested on Linux Fedora 17 and Linux Debian Squeeze
+# OS      : tested on Linux Fedora 17, Linux Debian Squeeze and Mac OSX Snow Leopard
+# Note    : python is used to display elapsed time used by the script 
 # ===============================================================================
 
 
