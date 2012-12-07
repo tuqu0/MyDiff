@@ -258,7 +258,7 @@ function MD5Compare() {
 	local md5dst=""
 
 	# MACINTOSH
-	if [ `uname | grep Darwin` == "Darwin" ]
+	if [ "`uname | grep Darwin`" == "Darwin" ]
 	then
 		md5src=`md5 $src | cut -d' ' -f4`
 		md5dst=`md5 $dst | cut -d' ' -f4`
@@ -364,7 +364,7 @@ function GetPermissions() {
 	local perm=""
 
 	# MACINTOSH
-	if [ `uname | grep Darwin` == "Darwin" ]
+	if [ "`uname | grep Darwin`" == "Darwin" ]
 	then
 		perm=`stat -f %Mp%Lp $entity`	
 	else # LINUX
@@ -389,7 +389,7 @@ function GetOwnerUser() {
 	local user=""
 
 	# MACINTOSH
-	if [ `uname | grep Darwin` == "Darwin" ]
+	if [ "`uname | grep Darwin`" == "Darwin" ]
 	then
 		user=`stat -f %Su $entity`
 	else # LINUX
@@ -414,7 +414,7 @@ function GetOwnerGroup() {
 	local group=""
 
 	# MACINTOSH
-	if [ `uname | grep Darwin` == "Darwin" ]
+	if [ "`uname | grep Darwin`" == "Darwin" ]
 	then
 		group=`stat -f %Sg $entity`
 	else # LINUX
@@ -439,7 +439,7 @@ function GetLastModifiedDate() {
 	local modifiedDate=""
 
 	# MACINTOSH
-	if [ `uname | grep Darwin` == "Darwin" ]
+	if [ "`uname | grep Darwin`" == "Darwin" ]
 	then
 		modifiedDate=`stat -f %Sm $entity`
 	else # LINUX
@@ -463,7 +463,7 @@ function SetLastModifiedDate() {
 	local time_sec=""
 
 	# MACINTOSH
-	if [ `uname | grep Darwin` == "Darwin" ]
+	if [ "`uname | grep Darwin`" == "Darwin" ]
 	then
 		modifiedDate=$( echo $modifiedDate | tr "  " " ")
 		year=$( echo $modifiedDate | cut -d' ' -f4 )
