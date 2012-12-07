@@ -117,7 +117,7 @@ function DoSynchronize() {
 		then
 			touch $dst
 		fi
-		merge=`echo l | sdiff -o $dst $src $dst`
+		merge=`echo l | sdiff -o $dst $src $dst 2>/dev/null`
 	fi
 
 	# Apply permissions, user and group owner, last modified date on the destination entity
@@ -253,8 +253,18 @@ function MD5Compare() {
 	local res=1
 	local src=$1
 	local dst=$2
-	local md5src=`md5sum $src | cut -d' ' -f1`
-	local md5dst=`md5sum $dst | cut -d' ' -f1`
+	local md5src=""
+	local md5dst=""
+
+	# MACINTOSH
+	if [ `uname | grep Darwin` == "Darwin" ]
+	then
+		md5src=`md5 $src | cut -d' ' -f4`
+		md5dst=`md5 $dst | cut -d' ' -f4`
+	else # LINUX
+		md5src=`md5sum $src | cut -d' ' -f1`
+		md5dst=`md5sum $dst | cut -d' ' -f1`
+	fi
 
 	if [ $md5src == $md5dst ]
 	then
@@ -350,7 +360,15 @@ function GroupOwnerCompare() {
 # Return the permissions of a file or directory (numeric format)
 function GetPermissions() {
 	local entity=$1
-	local perm=`stat --format %a $entity`
+	local perm=""
+
+	# MACINTOSH
+	if [ `uname | grep Darwin` == "Darwin" ]
+	then
+		perm=`stat -f %Mp%Lp $entity`	
+	else # LINUX
+		perm=`stat --format %a $entity`
+	fi	
 
 	echo $perm
 }
@@ -367,7 +385,15 @@ function SetPermissions() {
 # Retrun the user owner of a file or directory
 function GetOwnerUser() {
 	local entity=$1
-	local user=`stat --format %U $entity`
+	local user=""
+
+	# MACINTOSH
+	if [ `uname | grep Darwin` == "Darwin" ]
+	then
+		user=`stat -f %Su $entity`
+	else # LINUX
+		user=`stat --format %U $entity`
+	fi
 
 	echo $user
 }
@@ -384,7 +410,15 @@ function SetOwnerUser() {
 # Return the group owner of a file or directory
 function GetOwnerGroup() {
 	local entity=$1
-	local group=`stat --format %G $entity`
+	local group=""
+
+	# MACINTOSH
+	if [ `uname | grep Darwin` == "Darwin" ]
+	then
+		group=`stat -f %Sg $entity`
+	else # LINUX
+		group=`stat --format %G $entity`
+	fi
 
 	echo $group
 }
@@ -401,7 +435,15 @@ function SetOwnerGroup() {
 #Return the last modified date of a file or directory
 function GetLastModifiedDate() {
 	local entity=$1
-	local modifiedDate=`stat --format %y $entity`
+	local modifiedDate=""
+
+	# MACINTOSH
+	if [ `uname | grep Darwin` == "Darwin" ]
+	then
+		modifiedDate=`stat -f %Sm $entity`
+	else # LINUX
+		modifiedDate=`stat --format %y $entity`
+	fi
 	
 	echo "$modifiedDate"
 }
@@ -410,7 +452,74 @@ function GetLastModifiedDate() {
 function SetLastModifiedDate() {
 	local entity=$1
 	local modifiedDate="$2"
-	local res=`touch -d "$modifiedDate" $entity`
+	local res=""
+	local year=""
+	local month=""
+	local day=""
+	local time=""
+	local time_hour=""
+	local time_min=""
+	local time_sec=""
+
+	# MACINTOSH
+	if [ `uname | grep Darwin` == "Darwin" ]
+	then
+		modifiedDate=$( echo $modifiedDate | tr "  " " ")
+		year=$( echo $modifiedDate | cut -d' ' -f4 )
+		month=$( echo $modifiedDate | cut -d' ' -f1 )
+		day=$( echo $modifiedDate | cut -d' ' -f2 )
+
+		if [ ${#day} -eq 1 ]
+		then
+			day="0$day"		
+		fi
+
+		case $month in
+		'Jan')
+			month="01"
+			;;
+		'Feb')
+			month="02"
+			;;
+		'Mar')
+			month="03"
+			;;
+		'Apr')
+			month="04"
+			;;
+		'May')
+			month="05"
+			;;
+		'Jun')
+			month="06"
+			;;
+		'Jul')
+			month="07"
+			;;
+		'Aug')
+			month="08"
+			;;
+		'Sep')
+			month="09"
+			;;
+		'Oct')
+			month="10"
+			;;
+		'Nov')
+			month="11"
+			;;
+		'Dec')
+			month="12"
+			;;
+		esac
+		time=$( echo $modifiedDate | cut -d' ' -f3 )
+		time_hour=$( echo $time | cut -d: -f1 )
+		time_min=$( echo $time | cut -d: -f2 )
+		time_sec=$( echo $time | cut -d: -f3 )
+		res=`touch -mt $year$month$day$time_hour$time_min.$time_sec $entity`
+	else # LINUX
+		res=`touch -d "$modifiedDate" $entity`
+	fi
 
 	return $?
 }
@@ -576,7 +685,7 @@ function RecursiveDiff() {
 					PrintMsg 1 "$YELLOW Directories \"$src_entity\" and \"$dst_entity\" are identical\n"
 					LogDiff "Directories \"$src_entity\" and \"$dst_entity\" are identical\n"
 				fi
-				PrintMsg 1 "$WHITE\n********************************************************************************\n"
+				PrintMsg 1 "$WHITE********************************************************************************\n"
 				LogDiff "********************************************************************************\n"
 			fi
 			# recursive function call from the current sub directory
@@ -622,14 +731,14 @@ function RecursiveDiff() {
 					fi
 					PrintMsg 1 "$YELLOW Files \"$src_entity\" and \"$dst_entity\" are different\n"
 					LogDiff "Files \"$src_entity\" and \"$dst_entity\" are different\n"
-					PrintMsg 1 "$WHITE\n********************************************************************************\n"
+					PrintMsg 1 "$WHITE********************************************************************************\n"
 					LogDiff "********************************************************************************\n"
 					ret=$ERROR_MISMATCH
 				elif [ "$FILTER" == "" ] || [ $extFilters -eq 1 ]
 				then
 					PrintMsg 1 "$YELLOW Files \"$src_entity\" and \"$dst_entity\" are identical\n"
 					LogDiff "Files \"$src_entity\" and \"$dst_entity\" are identical\n"
-					PrintMsg 1 "$WHITE\n********************************************************************************\n"
+					PrintMsg 1 "$WHITE********************************************************************************\n"
 					LogDiff "********************************************************************************\n"
 				fi
 			fi 
@@ -684,12 +793,13 @@ function IterativeDiff() {
 					PrintMsg 1 "$YELLOW Directories \"$src_entity\" and \"$dst_entity\" are identical\n"
 					LogDiff "Directories \"$src_entity\" and \"$dst_entity\" are identical\n"
 				fi
-				PrintMsg 1 "$WHITE\n********************************************************************************\n"
+				PrintMsg 1 "$WHITE********************************************************************************\n"
 				LogDiff "********************************************************************************\n"
 			fi
 		fi
 	done
 
+	# list all files in the source directory
 	for src_entity in `find $src -type f`
 	do
 		if [ "$src_entity" != "$src" ]
@@ -734,13 +844,13 @@ function IterativeDiff() {
 					PrintMsg 1 "$YELLOW Files \"$src_entity\" and \"$dst_entity\" are different\n"
 					LogDiff "Files \"$src_entity\" and \"$dst_entity\" are different\n"
 					ret=$ERROR_MISMATCH
-					PrintMsg 1 "$WHITE\n********************************************************************************\n"
+					PrintMsg 1 "$WHITE********************************************************************************\n"
 					LogDiff "********************************************************************************\n"
 				elif [ "$FILTER" == "" ] || [ $extFilters -eq 1 ]
 				then
 					PrintMsg 1 "$YELLOW Files \"$src_entity\" and \"$dst_entity\" are identical\n"
 					LogDiff "Files \"$src_entity\" and \"$dst_entity\" are identical\n"
-					PrintMsg 1 "$WHITE\n********************************************************************************\n"
+					PrintMsg 1 "$WHITE********************************************************************************\n"
 					LogDiff "********************************************************************************\n"
 				fi
 			fi 
@@ -914,7 +1024,7 @@ done
 ret=0
 
 # timer initialization
-start_time=$(date +%s.%N)
+start_time=`python -c 'import time; print time.time()'`
 
 # check DIRPATH_SRC and DIRPATH_DST
 CheckInitSrcDestVar
@@ -924,30 +1034,31 @@ if [ $ANALYSIS_MODE -eq 1 ]
 then
 	RecursiveDiff $DIRPATH_SRC $DIRPATH_DST
 	ret=$?
-	PrintMsg 0 "$CYAN # ======================================================== #"
-	PrintMsg 0 "$CYAN #                          MyDiff                          #"
-	PrintMsg 0 "$CYAN # ======================================================== #\n"
-	PrintMsg 0 "$CYAN Mode         : Récursif"
+	PrintMsg 0 "$YELLOW # =========================================================================== #"
+	PrintMsg 0 "$YELLOW #                                   MyDiff                                    #"
+	PrintMsg 0 "$YELLOW # =========================================================================== #\n"
+	PrintMsg 0 "$YELLOW Mode         : Recursive"
 else
 	IterativeDiff $DIRPATH_SRC $DIRPATH_DST
 	ret=$?
-	PrintMsg 0 "$CYAN # ======================================================= #"
-	PrintMsg 0 "$CYAN #                          MyDiff                         #"
-	PrintMsg 0 "$CYAN # ======================================================= #\n"
-	PrintMsg 0 "$CYAN Mode         : Itératif"
+	PrintMsg 0 "$YELLOW # =========================================================================== #"
+	PrintMsg 0 "$YELLOW #                                   MyDiff                                    #"
+	PrintMsg 0 "$YELLOW # =========================================================================== #\n"
+	PrintMsg 0 "$YELLOW Mode         : Iterative"
 fi
 
 # Comparison between src and dst result
 if [ $ret -eq $ERROR_MISMATCH ]
 then
-	PrintMsg 0 "$CYAN Comparison   : $DIRPATH_SRC and $DIRPATH_DST are different"
+	PrintMsg 0 "$YELLOW Comparison   : $DIRPATH_SRC and $DIRPATH_DST are different"
 else
-	PrintMsg 0 "$CYAN Comparison   : $DIRPATH_SRC and $DIRPATH_DST are identical"
+	PrintMsg 0 "$YELLOW Comparison   : $DIRPATH_SRC and $DIRPATH_DST are identical"
 fi
 
 # calculate elapsed time
-end_time=$(date +%s.%N)
-PrintMsg 0 "$CYAN Elapsed time : $( echo $end_time - $start_time | bc ) seconds\n"
+end_time=`python -c 'import time; print time.time()'`
+
+PrintMsg 0 "$YELLOW Elapsed time : $( echo $end_time - $start_time | bc ) seconds\n"
 
 # reset the default color of the terminal
 tput sgr0
