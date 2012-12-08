@@ -104,38 +104,68 @@ function DoSynchronize() {
 	local groupOwner=`GetOwnerGroup $src`
 	local lastModifiedDate=`GetLastModifiedDate $src`
 	local merge=""
+  	local target=""
 
-	# the source entity is a directory	
+  	# the source entity is a directory	
 	if [ -d $src ]
 	then
 		# the destination directory does not exist
 		if [ ! -d $dst ]
 		then
+      			rm $dst 2>/dev/null # src entity is a directory and dst entity is a file ==> delete dst file
 			mkdir $dst	
 		fi
-	else # the source entity is a file => merge
-		if [ ! -e $dst ]
+	elif [ -f $src ] # the source entity is a regular file
+  	then
+    		# the destination file does not exist
+		if [ ! -f $dst ]
 		then
+      			rm -r $dst 2>/dev/null # src entity is a file and dst entity is a directory ==> delete dst directory
 			touch $dst
 		fi
 		merge=`echo l | sdiff -o $dst $src $dst 2>/dev/null`
+  	elif [ -L $src ] # the source entity is a symlink
+  	then
+      		rm $dst 2>/dev/null # if the dst symlink exists, delete it
+      		target=`GetSymlinkTarget $src` # get the target of the src symlink
+      		CreateSymlink $dst $target # create a new dst symlink with the src target
 	fi
 
-	# Apply permissions, user and group owner, last modified date on the destination entity
-	SetPermissions $dst "777"
-	SetLastModifiedDate $dst "$lastModifiedDate"
-	SetOwnerUser $dst $userOwner
-	SetOwnerGroup $dst $groupOwner
-	SetPermissions $dst $perm
+	# Apply permissions, user and group owner, last modified date on the destination entity if not a symlink 
+  	if [ ! -L $dst ]
+  	then  
+		SetPermissions $dst "777"
+	  	SetLastModifiedDate $dst "$lastModifiedDate"
+	  	SetOwnerUser $dst $userOwner
+	  	SetOwnerGroup $dst $groupOwner
+	  	SetPermissions $dst $perm
+  	fi
 }
 
 # Compare two entities.  Tests depend on the enabled flags (DIFF, MD5, PERM, LAST DATE MODIFIED)
 # If the entity is a directory, only the PERM test is done.
 # If one of the tests fails, the function returns an error code.
 function DoCompare() {
-	local res=0
+	local res=1
 	local src=$1
 	local dst=$2
+
+ 	# if the flag COMP_DIFF is enabled and src and dst entities are symlinks.
+  	# checking symlinks targets and exit the function (no more comparison tests done)
+  	if [ $COMP_DIFF -eq 1 ] && [ -L $src ] && [ -L $dst ]
+  	then
+        	SymlinksCompare $src $dst
+        	if [ $? -eq 1 ]
+        	then
+          		PrintMsg 2 "$BLUE Checking symlinks targets.........................................DIFFERENT\n"
+          		LogDiff "Checking symlinks targets.........................................DIFFERENT\n"
+          		return 1
+        	else
+          		PrintMsg 2 "$BLUE Checking symlinks targets.............................................IDENT\n"
+          		LogDiff "Checking symlinks targets.............................................IDENT\n"
+          		return 0
+        	fi
+  	fi
 
 	# if the destination entity does not exist
 	if [ ! -e $dst ]
@@ -154,11 +184,11 @@ function DoCompare() {
 		then
 			PrintMsg 2 "$BLUE Checking diff.....................................................DIFFERENT\n"
 			LogDiff "Checking diff.....................................................DIFFERENT\n"
-			res=1
 		else
 			PrintMsg 2 "$BLUE Checking diff.........................................................IDENT\n"
 			LogDiff "Checking diff.........................................................IDENT\n"
-		fi
+      			res=0	
+    		fi
 	fi
 
 	# if the flag COMP_MD5 is enabled and src and dst entities are not directories
@@ -169,48 +199,48 @@ function DoCompare() {
 		then
 			PrintMsg 2 "$BLUE Checking md5......................................................DIFFERENT\n"
 			LogDiff "Checking md5......................................................DIFFERENT\n"
-			res=1
 		else
 			PrintMsg 2 "$BLUE Checking md5..........................................................IDENT\n"
 			LogDiff "Checking md5..........................................................IDENT\n"
-		fi
+      			res=0
+    		fi
 	fi
 
 	# if the flag COMP_PERM is enabled or if the src entity is a directory
-	if [ $COMP_PERM -eq 1 ] || [ -d $src ]
+	if [ '(' $COMP_PERM -eq 1 ')' -o '(' -d $src -a -d $dst ')' ]
 	then
 		PermCompare $src $dst
 		if [ $? -eq 1 ]
 		then
 			PrintMsg 2 "$BLUE Checking rights...................................................DIFFERENT\n"
 			LogDiff "Checking rights...................................................DIFFERENT\n"
-			res=1
 		else
 			PrintMsg 2 "$BLUE Checking rights.......................................................IDENT\n"
 			LogDiff "Checking rights.......................................................IDENT\n"
-		fi
+      			res=0
+    		fi
 
 		UserOwnerCompare $src $dst
 		if [ $? -eq 1 ]
 		then
 			PrintMsg 2 "$BLUE Checking user.....................................................DIFFERENT\n"
 			LogDiff "Checking user.....................................................DIFFERENT\n"
-			res=1
 		else
 			PrintMsg 2 "$BLUE Checking user.........................................................IDENT\n"
 			LogDiff "Checking user.........................................................IDENT\n"	
-		fi
+      			res=0
+    		fi
 
 		GroupOwnerCompare $src $dst
 		if [ $? -eq 1 ]
 		then
 			PrintMsg 2 "$BLUE Checking group....................................................DIFFERENT\n"
 			LogDiff "Checking group....................................................DIFFERENT\n"	
-			res=1
 		else
 			PrintMsg 2 "$BLUE Checking group........................................................IDENT\n"
 			LogDiff "Checking group........................................................IDENT\n"
-		fi
+      			res=0
+    		fi
 	fi
 
 	# if the flag COMP_DATE is enabled and src and dst entities are not directories
@@ -221,14 +251,30 @@ function DoCompare() {
 		then
 			PrintMsg 2 "$BLUE Checking date.....................................................DIFFERENT\n"
 			LogDiff "Checking date.....................................................DIFFERENT\n"
-			res=1
 		else
 			PrintMsg 2 "$BLUE Checking date.........................................................IDENT\n"
 			LogDiff "Checking date.........................................................IDENT\n"
-		fi
+      			res=0
+    		fi
 	fi
 	
 	return $res
+}
+
+# Compare targets between two symlinks
+function SymlinksCompare() {
+	local res=1
+  	local src=$1
+  	local dst=$2
+  	local target_src=`GetSymlinkTarget $src`
+  	local target_dst=`GetSymlinkTarget $dst`
+
+  	if [ "$target_src" == "$target_dst" ]
+  	then
+  	 	res=0
+  	fi
+ 
+  	return $res
 }
 
 # Compare the content between two files by using the "diff" command
@@ -267,7 +313,7 @@ function MD5Compare() {
 		md5dst=`md5sum $dst | cut -d' ' -f1`
 	fi
 
-	if [ $md5src == $md5dst ]
+	if [ "$md5src" == "$md5dst" ]
 	then
 		res=0
 	else
@@ -358,6 +404,23 @@ function GroupOwnerCompare() {
 # File/Directory functions
 # ================================================================================
 
+# Return the target of a symlink
+function GetSymlinkTarget() {
+  	local link=$1
+  	local target=`readlink $link`
+
+  	echo $target
+}
+
+# Create a symlink with a target
+function CreateSymlink() {
+  	local link=$1
+  	local target=$2
+  	local cmd=`ln -s $target $link`
+
+  	return $?
+}
+  
 # Return the permissions of a file or directory (numeric format)
 function GetPermissions() {
 	local entity=$1
@@ -513,10 +576,10 @@ function SetLastModifiedDate() {
 			month="12"
 			;;
 		esac
-		time=$( echo $modifiedDate | cut -d' ' -f3 )
-		time_hour=$( echo $time | cut -d: -f1 )
-		time_min=$( echo $time | cut -d: -f2 )
-		time_sec=$( echo $time | cut -d: -f3 )
+		time_=$( echo $modifiedDate | cut -d' ' -f3 )
+		time_hour=$( echo $time_ | cut -d: -f1 )
+		time_min=$( echo $time_ | cut -d: -f2 )
+		time_sec=$( echo $time_ | cut -d: -f3 )
 		res=`touch -mt $year$month$day$time_hour$time_min.$time_sec $entity`
 	else # LINUX
 		res=`touch -d "$modifiedDate" $entity`
@@ -551,6 +614,7 @@ function CheckInitSrcDestVar() {
 		LogDiff "Variables DIRPATH_SRC and DIRPATH_DST are not initialized\n"
 		PrintUsage
 		tput sgr0
+
 		exit $ERROR_UNINITIALIZED_VARIABLE
 	fi
 }
@@ -695,8 +759,8 @@ function RecursiveDiff() {
 
 
 		# case 2 : the entity is not a directory
-		elif [ -e $src_entity ] 
-		then
+    		elif [ -e $src_entity ] || [ -L $src_entity ]
+    		then
 			CheckExtensionExclusions $src_entity
 			extExclusions=$?
 			CheckPathnameExclusions $src_entity
@@ -742,8 +806,9 @@ function RecursiveDiff() {
 					PrintMsg 1 "$WHITE********************************************************************************\n"
 					LogDiff "********************************************************************************\n"
 				fi
-			fi 
+			fi
 		fi
+
 		res=0
 		extFilters=0
 	done
@@ -800,8 +865,8 @@ function IterativeDiff() {
 		fi
 	done
 
-	# list all files in the source directory
-	for src_entity in `find $src -type f`
+	# list all regular files in the source directory
+	for src_entity in `find $src -type f && find $src -type l`
 	do
 		if [ "$src_entity" != "$src" ]
 		then
@@ -1054,6 +1119,14 @@ then
 	PrintMsg 0 "$YELLOW Comparison   : $DIRPATH_SRC and $DIRPATH_DST are different"
 else
 	PrintMsg 0 "$YELLOW Comparison   : $DIRPATH_SRC and $DIRPATH_DST are identical"
+fi
+
+# display syncing state
+if [ $SYNCHRONIZE -eq 1 ]
+then
+	PrintMsg 0 "$YELLOW Syncing      : ON"
+else
+	PrintMsg 0 "$YELLOW Syncing      : OFF"
 fi
 
 # calculate elapsed time
