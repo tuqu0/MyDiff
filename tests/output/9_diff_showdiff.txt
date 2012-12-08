@@ -1,4 +1,0 @@
-================================================================================
-   Affichage des différences sur les arborescences de test. Comparaison par défaut. Affichage des différences
-================================================================================
-# ./mydiff.sh -s /tmp/test/src/ -d /tmp/test/dst/ -v 2
