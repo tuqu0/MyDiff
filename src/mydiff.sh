@@ -966,15 +966,15 @@ ERROR_MISMATCH=3
 while getopts "s:d:m:c:e:f:l:v:Sh" opt
 do
 	case $opt in
-	's')	# source directory
+	s)	# source directory
 		DIRPATH_SRC=`RemoveEndSlash $OPTARG`
 		;;
 
-	'd')	# destination directory
+	d)	# destination directory
 		DIRPATH_DST=`RemoveEndSlash $OPTARG`
 		;;
   
-	'm')	# analysis mode
+	m)	# analysis mode
 		case $OPTARG in
 		'iterative')
 			ANALYSIS_MODE=0
@@ -991,20 +991,20 @@ do
 		esac
 		;;
 
-	'c')	# comparison mode
+	c)	# comparison mode
 		for flag in $( echo $OPTARG | tr " " " " ) 
 		do
 			case $flag in
-			'd')
+			d)
 				COMP_DIFF=1
 				;;
-			'm')
+			m)
 				COMP_MD5=1
 				;;
-			'p')
+			p)
 				COMP_PERM=1
 				;;
-			't')
+			t)
 				COMP_DATE=1
 				;;
 			?)
@@ -1017,7 +1017,7 @@ do
 		done
 		;;
 
-	'e')	# exclude filters
+	e)	# exclude filters
 		EXCLUDE=$OPTARG
 		for ext in $(echo $OPTARG | tr " " " ")
 		do
@@ -1030,7 +1030,7 @@ do
 		done
 		;;
 
-	'f')	# include filters
+	f)	# include filters
 		for ext in $(echo $OPTARG | tr ";" " ")
 		do
 			ext=$(echo $ext | tr "*" " ")
@@ -1039,11 +1039,11 @@ do
 	 	done	
 		;;
 
-	'l')	# log file name
+	l)	# log file name
 		LOG_FILE=$OPTARG
 		;;
 
-	'v')	# verbose levels
+	v)	# verbose levels
 		case $OPTARG in
 		0)
 			VERBOSE_LEVEL=$VERBOSE_LEVEL_ERROR
@@ -1066,11 +1066,11 @@ do
 		esac
 		;;
 
-	'S')	# synchronize
+	S)	# synchronize
 		SYNCHRONIZE=1
 		;;
 
-	'h')	# help menu
+	h)	# help menu
 		PrintUsage
 		tput sgr0
 		exit $SUCCESS
