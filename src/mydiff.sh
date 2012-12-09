@@ -146,7 +146,7 @@ function DoSynchronize() {
 # If the entity is a directory, only the PERM test is done.
 # If one of the tests fails, the function returns an error code.
 function DoCompare() {
-	local res=1
+	local res=0
 	local src=$1
 	local dst=$2
 
@@ -184,10 +184,10 @@ function DoCompare() {
 		then
 			PrintMsg 2 "$BLUE Checking diff.....................................................DIFFERENT\n"
 			LogDiff "Checking diff.....................................................DIFFERENT\n"
+			res=1
 		else
 			PrintMsg 2 "$BLUE Checking diff.........................................................IDENT\n"
 			LogDiff "Checking diff.........................................................IDENT\n"
-      			res=0	
     		fi
 	fi
 
@@ -199,25 +199,25 @@ function DoCompare() {
 		then
 			PrintMsg 2 "$BLUE Checking md5......................................................DIFFERENT\n"
 			LogDiff "Checking md5......................................................DIFFERENT\n"
+			res=1
 		else
 			PrintMsg 2 "$BLUE Checking md5..........................................................IDENT\n"
 			LogDiff "Checking md5..........................................................IDENT\n"
-      			res=0
     		fi
 	fi
 
 	# if the flag COMP_PERM is enabled or if the src entity is a directory
-	if [ '(' $COMP_PERM -eq 1 ')' -o '(' -d $src -a -d $dst ')' ]
+	if [ $COMP_PERM -eq 1 ] || [ -d $src ]
 	then
 		PermCompare $src $dst
 		if [ $? -eq 1 ]
 		then
 			PrintMsg 2 "$BLUE Checking rights...................................................DIFFERENT\n"
 			LogDiff "Checking rights...................................................DIFFERENT\n"
+			res=1
 		else
 			PrintMsg 2 "$BLUE Checking rights.......................................................IDENT\n"
 			LogDiff "Checking rights.......................................................IDENT\n"
-      			res=0
     		fi
 
 		UserOwnerCompare $src $dst
@@ -225,10 +225,10 @@ function DoCompare() {
 		then
 			PrintMsg 2 "$BLUE Checking user.....................................................DIFFERENT\n"
 			LogDiff "Checking user.....................................................DIFFERENT\n"
+			res=1
 		else
 			PrintMsg 2 "$BLUE Checking user.........................................................IDENT\n"
-			LogDiff "Checking user.........................................................IDENT\n"	
-      			res=0
+			LogDiff "Checking user.........................................................IDENT\n"
     		fi
 
 		GroupOwnerCompare $src $dst
@@ -236,10 +236,10 @@ function DoCompare() {
 		then
 			PrintMsg 2 "$BLUE Checking group....................................................DIFFERENT\n"
 			LogDiff "Checking group....................................................DIFFERENT\n"	
+			res=1
 		else
 			PrintMsg 2 "$BLUE Checking group........................................................IDENT\n"
 			LogDiff "Checking group........................................................IDENT\n"
-      			res=0
     		fi
 	fi
 
@@ -251,10 +251,10 @@ function DoCompare() {
 		then
 			PrintMsg 2 "$BLUE Checking date.....................................................DIFFERENT\n"
 			LogDiff "Checking date.....................................................DIFFERENT\n"
+			res=1
 		else
 			PrintMsg 2 "$BLUE Checking date.........................................................IDENT\n"
 			LogDiff "Checking date.........................................................IDENT\n"
-      			res=0
     		fi
 	fi
 	
@@ -735,7 +735,7 @@ function RecursiveDiff() {
 			then
 				# comparison
 				DoCompare $src_entity $dst_entity
-				res=$?	
+				res=$?
 				# if src and dst are differents
 				if [ $res -eq 1 ] 
 				then
