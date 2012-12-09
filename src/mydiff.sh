@@ -2,7 +2,7 @@
 
 # ==============================================================================
 # Name    : MyDiff
-# Version : 1.0 
+# Version : 1.00 
 # Author  : Puydoyeux Vincent
 # Date    : 06/12/2012 
 # OS      : Tested on --> Linux Fedora 17
@@ -926,7 +926,10 @@ function IterativeDiff() {
 				fi
 			fi 
 		fi
+		res=0
+		extFilters=0
 	done
+
 	return $ret
 }
 
