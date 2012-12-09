@@ -1027,7 +1027,7 @@ do
 		EXCLUDE=$OPTARG
 		for ext in $(echo $OPTARG | tr " " " ")
 		do
-			if [ ${ext:0:1} == '\' ] && [ ${ext:${#ext} - 1:${#ext}} == "$" ]
+			if [ ${ext:0:1} == '\\' ] && [ ${ext:${#ext} - 1:${#ext}} == "$" ]
 			then
 				EXCLUDE_EXT="$EXCLUDE_EXT${ext:1:${#ext} - 2} "
 			else
