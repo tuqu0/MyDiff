@@ -1,20 +1,22 @@
 #!/bin/bash
 
-
 # ==============================================================================
 # Name    : MyDiff
-# Version : 0.1 
+# Version : 1.0 
 # Author  : Puydoyeux Vincent
 # Date    : 06/12/2012 
-# OS      : tested on Linux Fedora 17, Linux Debian Squeeze and Mac OSX Snow Leopard
-# Note    : python is used to display elapsed time used by the script 
+# OS      : Tested on --> Linux Fedora 17
+#		      --> Linux Debian Squeeze
+#		      --> Mac OSX Snow Leopard (Darwin)
+# Shell   : Bash
+# Note    : Python is used to display the elapsed time used by the script 
 # ===============================================================================
+
 
 
 # ================================================================================
 # Printing functions
 # ================================================================================
-
 
 # Colors
 RED='\033[31m'
@@ -89,6 +91,7 @@ function LogDiff() {
 
 	printf "$msg\n" >> $LOG_FILE
 }
+
 
 
 # ================================================================================
@@ -400,6 +403,8 @@ function GroupOwnerCompare() {
 	return $res
 }
 
+
+
 # ================================================================================
 # File/Directory functions
 # ================================================================================
@@ -589,10 +594,10 @@ function SetLastModifiedDate() {
 }
 
 
+
 # ================================================================================
 # Utils functions
 # ================================================================================
-
 
 # Check if the given directory ends with a slash and then remove it
 function  RemoveEndSlash() {
@@ -736,7 +741,7 @@ function RecursiveDiff() {
 				# comparison
 				DoCompare $src_entity $dst_entity
 				res=$?
-				# if src and dst are differents
+				# if src and dst are different
 				if [ $res -eq 1 ] 
 				then
 					if [ $SYNCHRONIZE -eq 1 ]
@@ -787,7 +792,7 @@ function RecursiveDiff() {
 					res=$?
 				fi
 
-				# if src and dst entities are differents
+				# if src and dst entities are different
 				if [ $res -eq 1 ]
 				then
 					if [ $SYNCHRONIZE -eq 1 ]
@@ -845,7 +850,7 @@ function IterativeDiff() {
 				# comparison
 				DoCompare $src_entity $dst_entity
 				res=$?	
-				# if src and dst are differents
+				# if src and dst are different
 				if [ $res -eq 1 ] 
 				then
 					if [ $SYNCHRONIZE -eq 1 ]
@@ -865,7 +870,7 @@ function IterativeDiff() {
 		fi
 	done
 
-	# list all regular files in the source directory
+	# list all regular files and symlinks in the source directory
 	for src_entity in `find $src -type f && find $src -type l`
 	do
 		if [ "$src_entity" != "$src" ]
@@ -900,7 +905,7 @@ function IterativeDiff() {
 					res=$?
 				fi
 
-				# if src and dst entities are differents
+				# if src and dst entities are different
 				if [ $res -eq 1 ]
 				then
 					if [ $SYNCHRONIZE -eq 1 ]
@@ -924,13 +929,14 @@ function IterativeDiff() {
 	done
 	return $ret
 }
+
+
+
 # ================================================================================
 # Beginning of script
 # ================================================================================
 
 ############################# ARGUMENTS DEFAULT VALUES ###############################
-
-
 DIRPATH_SRC=""
 DIRPATH_DST=""
 ANALYSIS_MODE=1
@@ -959,8 +965,8 @@ ERROR_UNINITIALIZED_VARIABLE=2
 ERROR_MISMATCH=3
 
 
-############################# ARGUMENTS ANALYSIS ###############################
 
+############################# ARGUMENTS ANALYSIS ###############################
 
 # Options parser and arguments initialization
 while getopts "s:d:m:c:e:f:l:v:Sh" opt
@@ -1086,10 +1092,11 @@ do
 done
 
 
+
 ############################# MAIN  ###############################
 ret=0
 
-# timer initialization
+# get starting time
 start_time=`python -c 'import time; print time.time()'`
 
 # check DIRPATH_SRC and DIRPATH_DST
@@ -1129,12 +1136,14 @@ else
 	PrintMsg 0 "$YELLOW Syncing      : OFF"
 fi
 
-# calculate elapsed time
+# get ending time
 end_time=`python -c 'import time; print time.time()'`
 
+# display elapsed time
 PrintMsg 0 "$YELLOW Elapsed time : $( echo $end_time - $start_time | bc ) seconds\n"
 
 # reset the default color of the terminal
 tput sgr0
 
 exit $ret
+
