@@ -615,8 +615,11 @@ function CheckInitSrcDestVar() {
 
 	if [ "$DIRPATH_SRC" == "" ] || [ "$DIRPATH_DST" == "" ] || [ ! -d $DIRPATH_SRC ] || [ ! -d $DIRPATH_DST ]
 	then	
-		PrintMsg 3 "$RED Variables DIRPATH_SRC and DIRPATH_DST are not initialized\n"
-		LogDiff "Variables DIRPATH_SRC and DIRPATH_DST are not initialized\n"
+		PrintMsg 3 "$RED Missing source directory\n"
+		PrintMsg 3 "$RED Missing destination directory\n"
+		LogDiff "Missing source directory\n"
+		LogDiff "Missing destination directory\n"
+		LogDiff "********************************************************************************\n"
 		PrintUsage
 		tput sgr0
 
